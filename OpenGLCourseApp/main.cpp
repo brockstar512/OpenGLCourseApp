@@ -69,7 +69,8 @@ void CreateTriangle()
 }
 void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
 {
-    //create the shader based on the type
+    //create the shader based on the type... glCreateShader: creates an empty shader object and returns a unsigned value by which it can be referenced as like an ID
+    //so theShader is an alias value for the shader id on the graphics card.
     GLuint theShader = glCreateShader(shaderType);
     //get the code
     const GLchar* theCode[1];
