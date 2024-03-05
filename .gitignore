@@ -1,6 +1,9 @@
 # Prerequisites
 *.d
-
+*.vsidx
+*.opendb
+\v17
+/v17
 # Compiled Object files
 *.slo
 *.lo
