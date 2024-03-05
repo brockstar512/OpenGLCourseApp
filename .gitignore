@@ -4,6 +4,11 @@
 *.opendb
 \v17
 /v17
+*.d
+*.vsidx
+*.opendb
+*.log
+v17/
 # Compiled Object files
 *.slo
 *.lo
