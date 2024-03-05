@@ -2,8 +2,8 @@
 *.d
 *.vsidx
 *.opendb
-*.log
-v17/
+\v17
+/v17
 # Compiled Object files
 *.slo
 *.lo
