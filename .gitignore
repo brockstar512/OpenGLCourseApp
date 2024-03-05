@@ -9,6 +9,8 @@
 *.opendb
 *.log
 v17/
+*.VS
+.vs
 # Compiled Object files
 *.slo
 *.lo
