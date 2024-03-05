@@ -4,10 +4,19 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <stdio.h>
-
+#include <cmath>
 //window dimensions
 const GLint WIDTH = 800, HEIGHT = 600;
-GLuint VAO, VBO, shader;
+GLuint VAO, VBO, shader, uniformXMove;
+//not a gint or gfloat because these are not being passed to the shaders
+bool direction = true;
+float triOffset = 0.0f;
+float triMaxOffset = 0.7f;
+float triIncrement = 0.05f;
+
+
+//***a uniformed variable will be the same instance for every vertex***
+//***the variable (pos) will be passed htrough every vertex***
 //vertex shaders:
 //allows us to manipulate the vertices and pass them off to the fragmebnt shader
 //version of glsl
@@ -16,10 +25,13 @@ static const char* vShader = "                                                \n
                                                                               \n\
 layout (location = 0) in vec3 pos;											  \n\
                                                                               \n\
+uniform float xMove;                                                          \n\
+                                                                              \n\
 void main()                                                                   \n\
 {                                                                             \n\
-    gl_Position = vec4(pos.x, pos.y, pos.z, 1.0);				  \n\
+    gl_Position = vec4(0.4 * pos.x + xMove, 0.4 * pos.y, pos.z, 1.0);				  \n\
 }";
+
 //fragment shader: 
 //handinling each pixel on the screen and how it works with the vertices
 //we dont pass anything directly anything to the vertext shader normally
@@ -138,6 +150,9 @@ void CompileShaders()
         printf("Error Validating Program: '%s'\n", eLog);
         return;
     }
+
+    //get location/id of uniform variable
+    uniformXMove = glGetUniformLocation(shader, "xMove");
 }
 
 int main()
@@ -199,11 +214,29 @@ int main()
         //get and handle user input events
         glfwPollEvents();
 
+        //move tri
+        if (direction)
+        {
+            triOffset += triIncrement;
+        }
+        else {
+            triOffset -= triIncrement;
+        }
+
+        if (abs(triOffset) >= triMaxOffset)
+        {
+            direction = !direction;
+        }
+
         //clear window
         glClearColor(0.0f, 0.0f,0.0f,1.0f);//these values are the color/256
         glClear(GL_COLOR_BUFFER_BIT);
+        
 
         glUseProgram(shader);
+
+        //assign uniform shader
+        glUniform1f(uniformXMove, triOffset);
 
         //this is where you can use the shader
 
@@ -227,3 +260,73 @@ int main()
 
 
 //x86 is 32 bit
+
+/*
+GLM: gl math library
+vectors:
+    -magnitude and direction
+    -add and subrtact vectores = [x1+x2,y1+y2,z1+z2] or [x1-x2,y1-y2,z1-z2]
+    -multiplaying vector of scaler value expands the magnitude... |V| is magnitude
+    -dot product: returns a scaler value [x1*x2,y1*y2,z1*z2] or v1 * v2 = |v1|*|v2| * cos(theta)
+    -Magnitude:magnitude = sqrt(vx^2 + vy^2 + vz^2)
+    -get the unit vector (the normalized value): vector/|v|
+    -cross product: finds the right angle of two vectors. find a right angle to both vectors (ordering does matter) helps you also find the normal
+matrix
+    -group if i X j values
+    -i is rows, j is columns
+    -we use them to handle model transforms
+    -adding and subtracting matrices you just overlap the corresponding values ie v1x+v2x or v1x-v2x
+    -multiplying by scaler: multiply each value by the scaler
+    -multiplying and the dot product: find the dot product of each row x column... so <(x1 * x1) + (y1 * 2x1) +(z1 * x3)> [this location, 0]
+                                                                                                                          [0        ,     0]
+                                                                                   so <(x1 * y1) + (y1 * 2y) +(z1 * 3y)>  [0, this location]
+                                                                                                                          [0        ,     0]
+    -vectors are just matrices with a single column. multiplying matrices by a vector will create a modfied version of that matrx. it will be [(c1*r1)+(c2*r2)+(c3*r3)]
+                                                                                                                                              [(2c1*r1)+(2c2*r2)+(2c3*r3)] 
+    -tranforms:
+        identity matrix: all values are 0 except the the places diagonal starting from the top left to the bottom right. 
+        the identity matrix is the starting point for all other transforms. 
+        [1,0,0,0]      [x]
+        [0,1,0,0]   *  [y]
+        [0,0,1,0]      [z]
+        [0,0,0,1]      [1]
+        translation:translation moves the vector. take the foruth column and put in how far you want to move the matrix and multiply the identity matrix (with those values in the 4 column)
+        by your vector.
+        [1,0,0,X]      [x]= [x + X]
+        [0,1,0,Y]   *  [y]= [y + Y]
+        [0,0,1,Z]      [z]= [z + Z]
+        [0,0,0,1]      [1]= [1]
+        scaling: resize a vector
+        [SX,0,0,0]      [x] = [SX * x]
+        [0,SY,0,0]   *  [y] = [SY * y]
+        [0,0,SZ,0]      [z] = [SZ * z]
+        [0,0,0, 1]      [1] = [1]
+        rotation: rotating around the origin axis
+        x rotation
+                [1,0,0,X]                        *  [x] = [x]
+                [0, cos(theta), -sin(theta),0]   *  [y] = [cos(theta)*y + sin(theta) * z]
+                [0, sin(theta),  cos(theta),0]   *  [z] = [sin(theta)*y + cos(theta) * z]
+                [0,0,0,1]                        *  [1]= [1]
+        y rotation
+                [1,0,0,X]                        *  [x] = [x]
+                [0, cos(theta), -sin(theta),0]   *  [y] = [cos(theta)*x + sing(theta)]
+                [0,1,0,0]                        *  [z] = [z + Z]
+                [0,0,0,1]                        *  [1]= [1]
+        z rotation
+                [1,0,0,X]                        *  [x] = [x]
+                [0, cos(theta), -sin(theta),0]   *  [y] = [cos(theta)*x + sing(theta)]
+                [0,1,0,0]                        *  [z] = [z + Z]
+                [0,0,0,1]                        *  [1]= [1]
+        combining 
+        
+
+        order matters so keep in mind what you are doing. for example when you are applying scale and moving transform make sure you apply the transform first, then the scale
+        otherwise you are scaling the transpform not the item.
+
+
+        unform variables
+            variable that is unified and not applied to a particular vertiex. will have a location id in the shader.in order to apply something to the unioform variabel we have t
+            get shader id then apply it to the id
+
+
+        */
