@@ -5,16 +5,24 @@
 #include <iostream>
 #include <stdio.h>
 #include <cmath>
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
+
 //window dimensions
 const GLint WIDTH = 800, HEIGHT = 600;
-GLuint VAO, VBO, shader, uniformXMove;
+const float toRadians = 3.14159265f / 180.0f;
+GLuint VAO, VBO, shader, uniformModel;
 //not a gint or gfloat because these are not being passed to the shaders
 bool direction = true;
 float triOffset = 0.0f;
 float triMaxOffset = 0.7f;
 float triIncrement = 0.05f;
-
-
+float currAngle = 0.0f;
+//glm::mat4 model(1.0f);
+// glm::mat4 model = glm::mat4(1.0f);
+// 
+// 
 //***a uniformed variable will be the same instance for every vertex***
 //***the variable (pos) will be passed htrough every vertex***
 //vertex shaders:
@@ -25,11 +33,11 @@ static const char* vShader = "                                                \n
                                                                               \n\
 layout (location = 0) in vec3 pos;											  \n\
                                                                               \n\
-uniform float xMove;                                                          \n\
+uniform mat4 model;                                                          \n\
                                                                               \n\
 void main()                                                                   \n\
 {                                                                             \n\
-    gl_Position = vec4(0.4 * pos.x + xMove, 0.4 * pos.y, pos.z, 1.0);				  \n\
+    gl_Position = model * vec4(0.4 * pos.x, 0.4 * pos.y, pos.z, 1.0);				  \n\
 }";
 
 //fragment shader: 
@@ -152,7 +160,7 @@ void CompileShaders()
     }
 
     //get location/id of uniform variable
-    uniformXMove = glGetUniformLocation(shader, "xMove");
+    uniformModel = glGetUniformLocation(shader, "model");
 }
 
 int main()
@@ -227,6 +235,11 @@ int main()
         {
             direction = !direction;
         }
+        currAngle += 1.0f;
+        if (currAngle >= 360)
+        {
+            currAngle -= 360;
+        }
 
         //clear window
         glClearColor(0.0f, 0.0f,0.0f,1.0f);//these values are the color/256
@@ -235,8 +248,20 @@ int main()
 
         glUseProgram(shader);
 
+        //glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 model(1.0f);
+        //modifying the model
+        //put it back into the model after you changed the model
+       // model = glm::translate(model, glm::vec3(triOffset, 0.0f, 0.0f));
+                    // degrees in radians //which axis you want to rotate it on
+        model = glm::rotate(model, currAngle * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+        //^the order matters... if these are flipped, it will rotate the world then will be tranlated it around the distored world
+        //if the triangle size is being morphed and not consitent it is because we are not using a projection matrix
+        
         //assign uniform shader
-        glUniform1f(uniformXMove, triOffset);
+        //glUniform1f(uniformXMove, triOffset);
+        //we dont put it the model directly. we put in the address of the model
+        glUniformMatrix4fv(uniformModel,1,GL_FALSE,glm::value_ptr(model));
 
         //this is where you can use the shader
 
@@ -307,7 +332,7 @@ matrix
                 [0, cos(theta), -sin(theta),0]   *  [y] = [cos(theta)*y + sin(theta) * z]
                 [0, sin(theta),  cos(theta),0]   *  [z] = [sin(theta)*y + cos(theta) * z]
                 [0,0,0,1]                        *  [1]= [1]
-        y rotation
+        y rotation (did not finish these)
                 [1,0,0,X]                        *  [x] = [x]
                 [0, cos(theta), -sin(theta),0]   *  [y] = [cos(theta)*x + sing(theta)]
                 [0,1,0,0]                        *  [z] = [z + Z]
