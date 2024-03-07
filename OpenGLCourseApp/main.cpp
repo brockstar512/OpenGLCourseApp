@@ -12,12 +12,9 @@
 //window dimensions
 const GLint WIDTH = 800, HEIGHT = 600;
 const float toRadians = 3.14159265f / 180.0f;
-GLuint VAO, VBO, shader, uniformModel;
+GLuint VAO, VBO, IBO, shader, uniformModel;
 //not a gint or gfloat because these are not being passed to the shaders
 bool direction = true;
-float triOffset = 0.0f;
-float triMaxOffset = 0.7f;
-float triIncrement = 0.05f;
 float currAngle = 0.0f;
 float toScale = 0.4f;
 //glm::mat4 model(1.0f);
@@ -29,6 +26,7 @@ float toScale = 0.4f;
 //vertex shaders:
 //allows us to manipulate the vertices and pass them off to the fragmebnt shader
 // using the out keyword lets up output/return a value from the shader to the cpp file
+// //i think the vertex is saying to each vertext... whatever your pos is... take the clamped value color of that point
 //version of glsl
 static const char* vShader = "                                                \n\
 #version 330                                                                  \n\
@@ -60,9 +58,24 @@ void main()                                                                   \n
 
 void CreateTriangle()
 {
+    //place which point to place in which order based on indeces
+    //we are saying the 0 index in vertices is our first point
+    //then draw the 3rd index, then draw the 1st index.
+    //each line is a side of our pyramid. 
+    //THE INDICES IS REFERING THE LINE IN THE VERTICES SO 0 IS -1.0f,-1.0f,0.0f AND 3 is 0.0f,1.0f,0.0f
+    //the second index in indeces (2,3,0,) is the front facing side... 
+    unsigned int indices[] = {
+        0,3,1,
+        1,3,2,
+        2,3,0,//this  right bottom point(1.0f,-1.0f,0.0f) top point(0.0f,1.0f,0.0f) left bottom point(-1.0f,-1.0f,0.0f,)
+        0,1,2
+    };
+
+
     //define points of VAOs
     GLfloat vertices[] = {
         -1.0f,-1.0f,0.0f,
+        0.0f,-1.0f,1.0f,
         1.0f,-1.0f,0.0f,
         0.0f,1.0f,0.0f
     };
@@ -72,6 +85,15 @@ void CreateTriangle()
     glGenVertexArrays(1, &VAO);
     //bind the vertext array
     glBindVertexArray(VAO);
+
+    //create buffer for the indeices
+    glGenBuffers(1,&IBO);
+    //bind the buffer
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,IBO);
+    //we want the buffer element to bind and the size of the indeces
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,GL_STATIC_DRAW);
+    
+    
     //create the buffer on the graphics car
     glGenBuffers(1, &VBO);
     //enter which buffer which is the array buffer and pick which buffer by the id
@@ -86,8 +108,14 @@ void CreateTriangle()
     glEnableVertexAttribArray(0);
     //binding the array to nothing
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    //unbind the IBO/EBO after you unbind the VAO
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    
     //unbinding the array
     glBindVertexArray(0);
+
 
 }
 void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
@@ -168,6 +196,9 @@ void CompileShaders()
 
 int main()
 {
+
+
+
     //initialize glfw
     if (!glfwInit())
     {
@@ -211,6 +242,9 @@ int main()
         glfwTerminate();
         return 1;
     }
+
+    //initailze depth test so the screen can determine which vertext should be behind vs in front
+    glEnable(GL_DEPTH_TEST);
     //setup our viewport size
     //this is the buffer viewport the other width and heighth is for the window
     glViewport(0,0,bufferWidth,bufferHeight);
@@ -225,11 +259,15 @@ int main()
         //get and handle user input events
         glfwPollEvents();
 
-
+        currAngle += 1.0f;
+        if (currAngle >= 360)
+        {
+            currAngle -= 360;
+        }
 
         //clear window
         glClearColor(0.0f, 0.0f,0.0f,1.0f);//these values are the color/256
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);//now it's clearing both the depth and buffer bit via the bitwaise p[erator
         
 
         glUseProgram(shader);
@@ -237,7 +275,8 @@ int main()
         //glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 model(1.0f);
         //modifying the model
-        //put it back into the model after you changed the model
+        //put it back into the model after you changed the model...rotate on the y axix
+        model = glm::rotate(model, currAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::scale(model, glm::vec3(toScale, toScale, 1.0f));
 
 
@@ -250,7 +289,17 @@ int main()
 
         glBindVertexArray(VAO);
 
-        glDrawArrays(GL_TRIANGLES,0,3);
+        //we are not drawing the arrays anymore
+        //glDrawArrays(GL_TRIANGLES,0,3);
+
+        //bind ibo
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,IBO);
+        //draw the element not based on arrays but based on the element ids
+                                   //count of indeces//the size of type
+        glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
+        //unbind
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        
 
         glBindVertexArray(0);
 
