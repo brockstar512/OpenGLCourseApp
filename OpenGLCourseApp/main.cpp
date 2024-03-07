@@ -12,7 +12,7 @@
 //window dimensions
 const GLint WIDTH = 800, HEIGHT = 600;
 const float toRadians = 3.14159265f / 180.0f;
-GLuint VAO, VBO, IBO, shader, uniformModel;
+GLuint VAO, VBO, IBO, shader, uniformModel, uniformProjection;
 //not a gint or gfloat because these are not being passed to the shaders
 bool direction = true;
 float currAngle = 0.0f;
@@ -34,11 +34,12 @@ static const char* vShader = "                                                \n
 layout (location = 0) in vec3 pos;											  \n\
 out vec4 vertexColor;                                                        \n\
 uniform mat4 model;                                                          \n\
+uniform mat4 worldProjection;                                                 \n\
                                                                               \n\
 void main()                                                                   \n\
 {                                                                             \n\
     vertexColor = vec4(clamp(pos,0.0f,1.0f),1);                                   \n\
-    gl_Position = model * vec4(pos, 1.0);				                        \n\
+    gl_Position = worldProjection *  model * vec4(pos, 1.0);				                        \n\
 }";
 
 //fragment shader: 
@@ -192,6 +193,8 @@ void CompileShaders()
 
     //get location/id of uniform variable
     uniformModel = glGetUniformLocation(shader, "model");
+    //get the address/id of the worldProjection and place it in the uniformProjection variable
+    uniformProjection = glGetUniformLocation(shader, "worldProjection");
 }
 
 int main()
@@ -248,12 +251,17 @@ int main()
     //setup our viewport size
     //this is the buffer viewport the other width and heighth is for the window
     glViewport(0,0,bufferWidth,bufferHeight);
-
+    //BTV62LZF
+    // 2D4PGMZW
+    // 
     //create triangle
     CreateTriangle();
     //compile shader
     CompileShaders();
     //loop until window closed
+    //make the project...we will not need to recreate the projection so we dont put it in the while loop/game loop
+    //this makes ure everything is takin ginto consierdation the aspect ratio
+    glm::mat4 projection = glm::perspective(45.0f, (GLfloat)bufferWidth/(GLfloat)bufferHeight,0.1f,100.0f);
     while (!glfwWindowShouldClose(mainWindow))
     {
         //get and handle user input events
@@ -275,6 +283,7 @@ int main()
         //glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 model(1.0f);
         //modifying the model
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));//push the trangle away from you
         //put it back into the model after you changed the model...rotate on the y axix
         model = glm::rotate(model, currAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::scale(model, glm::vec3(toScale, toScale, 1.0f));
@@ -284,6 +293,9 @@ int main()
         //glUniform1f(uniformXMove, triOffset);
         //we dont put it the model directly. we put in the address of the model
         glUniformMatrix4fv(uniformModel,1,GL_FALSE,glm::value_ptr(model));
+
+        glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+
 
         //this is where you can use the shader
 
@@ -315,9 +327,6 @@ int main()
 }
 
 
-
-//x86 is 32 bit
-
 /*
 * interpolation:
 * how the fragment shader interpolates the points between the vertices. happens during the rasterization stage during the render. 
@@ -325,7 +334,7 @@ quickly estimatng/calculating with normal map.
 * 
 * 
 * index draws:
-* predefined indexes to reuse so we dont have to defin every vertices
+* predefined indexes to reuse so we dont have to defin every vertices.
 * 
 * projections:
 * how things are visualized. view to change from view space to clip space using coordinat systems
