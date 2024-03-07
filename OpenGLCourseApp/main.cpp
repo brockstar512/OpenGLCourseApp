@@ -19,7 +19,7 @@ float triOffset = 0.0f;
 float triMaxOffset = 0.7f;
 float triIncrement = 0.05f;
 float currAngle = 0.0f;
-float toScale = 0.0f;
+float toScale = 0.4f;
 //glm::mat4 model(1.0f);
 // glm::mat4 model = glm::mat4(1.0f);
 // 
@@ -28,17 +28,19 @@ float toScale = 0.0f;
 //***the variable (pos) will be passed htrough every vertex***
 //vertex shaders:
 //allows us to manipulate the vertices and pass them off to the fragmebnt shader
+// using the out keyword lets up output/return a value from the shader to the cpp file
 //version of glsl
 static const char* vShader = "                                                \n\
 #version 330                                                                  \n\
                                                                               \n\
 layout (location = 0) in vec3 pos;											  \n\
-                                                                              \n\
+out vec4 vertexColor;                                                        \n\
 uniform mat4 model;                                                          \n\
                                                                               \n\
 void main()                                                                   \n\
 {                                                                             \n\
-    gl_Position = model * vec4(0.4 * pos.x, 0.4 * pos.y, pos.z, 1.0);				  \n\
+    vertexColor = vec4(clamp(pos,0.0f,1.0f),1);                                   \n\
+    gl_Position = model * vec4(pos, 1.0);				                        \n\
 }";
 
 //fragment shader: 
@@ -48,12 +50,12 @@ void main()                                                                   \n
         //fShader only has 1 output value normally so whater you call the out varaible it will assume that is your output value
 static const char* fShader = "                                                \n\
 #version 330                                                                  \n\
-                                                                              \n\
+in vec4 vertexColor;                                                                 \n\
 out vec4 colour;                                                               \n\
-                                                                              \n\
+                                                                             \n\
 void main()                                                                   \n\
 {                                                                             \n\
-    colour = vec4(1.0, 0.0, 0.0, 1.0);                                         \n\
+    colour = vertexColor;                                                       \n\
 }";
 
 void CreateTriangle()
@@ -223,29 +225,7 @@ int main()
         //get and handle user input events
         glfwPollEvents();
 
-        //move tri
-        if (direction)
-        {
-            triOffset += triIncrement;
-        }
-        else {
-            triOffset -= triIncrement;
-        }
 
-        if (abs(triOffset) >= triMaxOffset)
-        {
-            direction = !direction;
-        }
-        currAngle += 1.0f;
-        if (currAngle >= 360)
-        {
-            currAngle -= 360;
-        }
-        toScale += 0.05f;
-        if (toScale >= 2)
-        {
-            toScale = 0.0f;
-        }
 
         //clear window
         glClearColor(0.0f, 0.0f,0.0f,1.0f);//these values are the color/256
@@ -258,13 +238,7 @@ int main()
         glm::mat4 model(1.0f);
         //modifying the model
         //put it back into the model after you changed the model
-       // model = glm::translate(model, glm::vec3(triOffset, 0.0f, 0.0f));
-                    // degrees in radians //which axis you want to rotate it on
-        //model = glm::rotate(model, currAngle * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
-        //^the order matters... if these are flipped, it will rotate the world then will be tranlated it around the distored world
-        //if the triangle size is being morphed and not consitent it is because we are not using a projection matrix
         model = glm::scale(model, glm::vec3(toScale, toScale, 1.0f));
-        //REMEMBER THAT ORDER MATTERS BECAUSE THE TRANSFORMATIONS WILL BE COMPOUNDED AND THE SCALES WILL EFFECT THE TRANSLATIONS AND ROTATIONS
 
 
         //assign uniform shader
@@ -296,71 +270,22 @@ int main()
 //x86 is 32 bit
 
 /*
-GLM: gl math library
-vectors:
-    -magnitude and direction
-    -add and subrtact vectores = [x1+x2,y1+y2,z1+z2] or [x1-x2,y1-y2,z1-z2]
-    -multiplaying vector of scaler value expands the magnitude... |V| is magnitude
-    -dot product: returns a scaler value [x1*x2,y1*y2,z1*z2] or v1 * v2 = |v1|*|v2| * cos(theta)
-    -Magnitude:magnitude = sqrt(vx^2 + vy^2 + vz^2)
-    -get the unit vector (the normalized value): vector/|v|
-    -cross product: finds the right angle of two vectors. find a right angle to both vectors (ordering does matter) helps you also find the normal
-matrix
-    -group if i X j values
-    -i is rows, j is columns
-    -we use them to handle model transforms
-    -adding and subtracting matrices you just overlap the corresponding values ie v1x+v2x or v1x-v2x
-    -multiplying by scaler: multiply each value by the scaler
-    -multiplying and the dot product: find the dot product of each row x column... so <(x1 * x1) + (y1 * 2x1) +(z1 * x3)> [this location, 0]
-                                                                                                                          [0        ,     0]
-                                                                                   so <(x1 * y1) + (y1 * 2y) +(z1 * 3y)>  [0, this location]
-                                                                                                                          [0        ,     0]
-    -vectors are just matrices with a single column. multiplying matrices by a vector will create a modfied version of that matrx. it will be [(c1*r1)+(c2*r2)+(c3*r3)]
-                                                                                                                                              [(2c1*r1)+(2c2*r2)+(2c3*r3)] 
-    -tranforms:
-        identity matrix: all values are 0 except the the places diagonal starting from the top left to the bottom right. 
-        the identity matrix is the starting point for all other transforms. 
-        [1,0,0,0]      [x]
-        [0,1,0,0]   *  [y]
-        [0,0,1,0]      [z]
-        [0,0,0,1]      [1]
-        translation:translation moves the vector. take the foruth column and put in how far you want to move the matrix and multiply the identity matrix (with those values in the 4 column)
-        by your vector.
-        [1,0,0,X]      [x]= [x + X]
-        [0,1,0,Y]   *  [y]= [y + Y]
-        [0,0,1,Z]      [z]= [z + Z]
-        [0,0,0,1]      [1]= [1]
-        scaling: resize a vector
-        [SX,0,0,0]      [x] = [SX * x]
-        [0,SY,0,0]   *  [y] = [SY * y]
-        [0,0,SZ,0]      [z] = [SZ * z]
-        [0,0,0, 1]      [1] = [1]
-        rotation: rotating around the origin axis
-        x rotation
-                [1,0,0,X]                        *  [x] = [x]
-                [0, cos(theta), -sin(theta),0]   *  [y] = [cos(theta)*y + sin(theta) * z]
-                [0, sin(theta),  cos(theta),0]   *  [z] = [sin(theta)*y + cos(theta) * z]
-                [0,0,0,1]                        *  [1]= [1]
-        y rotation (did not finish these)
-                [1,0,0,X]                        *  [x] = [x]
-                [0, cos(theta), -sin(theta),0]   *  [y] = [cos(theta)*x + sing(theta)]
-                [0,1,0,0]                        *  [z] = [z + Z]
-                [0,0,0,1]                        *  [1]= [1]
-        z rotation
-                [1,0,0,X]                        *  [x] = [x]
-                [0, cos(theta), -sin(theta),0]   *  [y] = [cos(theta)*x + sing(theta)]
-                [0,1,0,0]                        *  [z] = [z + Z]
-                [0,0,0,1]                        *  [1]= [1]
-        combining 
-        
-
-        order matters so keep in mind what you are doing. for example when you are applying scale and moving transform make sure you apply the transform first, then the scale
-        otherwise you are scaling the transpform not the item.
+* interpolation:
+* how the fragment shader interpolates the points between the vertices. happens during the rasterization stage during the render. 
+quickly estimatng/calculating with normal map.
+* 
+* 
+* index draws:
+* predefined indexes to reuse so we dont have to defin every vertices
+* 
+* projections:
+* how things are visualized. view to change from view space to clip space using coordinat systems
+* previously we used local space
+* we are going to use projection to make view space which is the position of vertices in world space
+* view space position in the world in relation to the camera by mutiplying it by view matrix
+* clip space is clipping  out what we dont want to see
+* screen space is the final image and projected onto the window itself
 
 
-        unform variables
-            variable that is unified and not applied to a particular vertiex. will have a location id in the shader.in order to apply something to the unioform variabel we have t
-            get shader id then apply it to the id
-
-
-        */
+frustum is the dined are we want to see. its the truncated pyramid
+*/
