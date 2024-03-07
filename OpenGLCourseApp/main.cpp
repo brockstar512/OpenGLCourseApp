@@ -19,6 +19,7 @@ float triOffset = 0.0f;
 float triMaxOffset = 0.7f;
 float triIncrement = 0.05f;
 float currAngle = 0.0f;
+float toScale = 0.0f;
 //glm::mat4 model(1.0f);
 // glm::mat4 model = glm::mat4(1.0f);
 // 
@@ -240,6 +241,11 @@ int main()
         {
             currAngle -= 360;
         }
+        toScale += 0.05f;
+        if (toScale >= 2)
+        {
+            toScale = 0.0f;
+        }
 
         //clear window
         glClearColor(0.0f, 0.0f,0.0f,1.0f);//these values are the color/256
@@ -254,10 +260,13 @@ int main()
         //put it back into the model after you changed the model
        // model = glm::translate(model, glm::vec3(triOffset, 0.0f, 0.0f));
                     // degrees in radians //which axis you want to rotate it on
-        model = glm::rotate(model, currAngle * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+        //model = glm::rotate(model, currAngle * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
         //^the order matters... if these are flipped, it will rotate the world then will be tranlated it around the distored world
         //if the triangle size is being morphed and not consitent it is because we are not using a projection matrix
-        
+        model = glm::scale(model, glm::vec3(toScale, toScale, 1.0f));
+        //REMEMBER THAT ORDER MATTERS BECAUSE THE TRANSFORMATIONS WILL BE COMPOUNDED AND THE SCALES WILL EFFECT THE TRANSLATIONS AND ROTATIONS
+
+
         //assign uniform shader
         //glUniform1f(uniformXMove, triOffset);
         //we dont put it the model directly. we put in the address of the model
