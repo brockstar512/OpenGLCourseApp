@@ -8,56 +8,35 @@
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
-
+#include <vector>
+#include "Mesh.h"
+#include "Shader.h"
+#include "MyWindow.h"
 //window dimensions
-const GLint WIDTH = 800, HEIGHT = 600;
+
 const float toRadians = 3.14159265f / 180.0f;
-GLuint VAO, VBO, IBO, shader, uniformModel, uniformProjection;
+GLuint shader;
+std::vector<Mesh*> meshList;
+std::vector<Shader*> shaderList;
+MyWindow window;
 //not a gint or gfloat because these are not being passed to the shaders
-bool direction = true;
 float currAngle = 0.0f;
 float toScale = 0.4f;
-//glm::mat4 model(1.0f);
-// glm::mat4 model = glm::mat4(1.0f);
-// 
-// 
-//***a uniformed variable will be the same instance for every vertex***
-//***the variable (pos) will be passed htrough every vertex***
-//vertex shaders:
-//allows us to manipulate the vertices and pass them off to the fragmebnt shader
-// using the out keyword lets up output/return a value from the shader to the cpp file
-// //i think the vertex is saying to each vertext... whatever your pos is... take the clamped value color of that point
-//version of glsl
-static const char* vShader = "                                                \n\
-#version 330                                                                  \n\
-                                                                              \n\
-layout (location = 0) in vec3 pos;											  \n\
-out vec4 vertexColor;                                                        \n\
-uniform mat4 model;                                                          \n\
-uniform mat4 worldProjection;                                                 \n\
-                                                                              \n\
-void main()                                                                   \n\
-{                                                                             \n\
-    vertexColor = vec4(clamp(pos,0.0f,1.0f),1);                                   \n\
-    gl_Position = worldProjection *  model * vec4(pos, 1.0);				                        \n\
-}";
 
-//fragment shader: 
-//handinling each pixel on the screen and how it works with the vertices
-//we dont pass anything directly anything to the vertext shader normally
-//we pass it to the vertext shader and the fragment shader picks up the result
-        //fShader only has 1 output value normally so whater you call the out varaible it will assume that is your output value
-static const char* fShader = "                                                \n\
-#version 330                                                                  \n\
-in vec4 vertexColor;                                                                 \n\
-out vec4 colour;                                                               \n\
-                                                                             \n\
-void main()                                                                   \n\
-{                                                                             \n\
-    colour = vertexColor;                                                       \n\
-}";
+//vertex shader
+static const char* vShader = "Shaders/shader.vert";
+//fragment shader
+static const char* fShader = "Shaders/shader.frag";
 
-void CreateTriangle()
+
+void CreateShader()
+{
+    Shader* shader1 = new Shader();
+    shader1->CreateFromFile(vShader,fShader);
+    shaderList.push_back(shader1);
+}
+
+void CreateObject()
 {
     //place which point to place in which order based on indeces
     //we are saying the 0 index in vertices is our first point
@@ -82,187 +61,29 @@ void CreateTriangle()
     };
     //center of screen is 0,0 in opengl
 
-    //create the vao - ammount of array, where we want to store the address/id of the arrays
-    glGenVertexArrays(1, &VAO);
-    //bind the vertext array
-    glBindVertexArray(VAO);
-
-    //create buffer for the indeices
-    glGenBuffers(1,&IBO);
-    //bind the buffer
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,IBO);
-    //we want the buffer element to bind and the size of the indeces
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,GL_STATIC_DRAW);
-    
-    
-    //create the buffer on the graphics car
-    glGenBuffers(1, &VBO);
-    //enter which buffer which is the array buffer and pick which buffer by the id
-    glBindBuffer(GL_ARRAY_BUFFER,VBO);
-    //connect buffer data.. the vertices to the array
-                              //pass in the size of the array//pass in vertices, pass in how we are going to be interacting the triangle. we are not going to be redrawing it so we are sticking with DL_Static draw
-    glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_STATIC_DRAW);
-    //location         //which value, how many values, what kind of value,normalize, stride, offest for starting value
-    // //stride: i think that means splicing data with addiotnal data cause you can data pack by making odds a vluae for one things and even value means another
-    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,0);
-    //we want to enable an array usage to work
-    glEnableVertexAttribArray(0);
-    //binding the array to nothing
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    //unbind the IBO/EBO after you unbind the VAO
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    
-    //unbinding the array
-    glBindVertexArray(0);
-
+    Mesh* obj1 = new Mesh();
+    obj1->CreateMesh(vertices, indices,12,12);
+    meshList.push_back(obj1);
 
 }
-void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
-{
-    //create the shader based on the type... glCreateShader: creates an empty shader object and returns a unsigned value by which it can be referenced as like an ID
-    //so theShader is an alias value for the shader id on the graphics card.
-    GLuint theShader = glCreateShader(shaderType);
-    //get the code
-    const GLchar* theCode[1];
-    theCode[0] = shaderCode;
-    //determine how many characters it is
-    GLint codeLength[1];
-    codeLength[0] = strlen(shaderCode);
-    //pass the shader to the shader source wuitg tge type of shader  and tell he program how long and what the cose is
-    glShaderSource(theShader, 1, theCode, codeLength);
-    //conpile it
-    glCompileShader(theShader);
 
-
-    GLint result = 0;
-    GLchar eLog[1024] = { 0 };
-
-    glGetShaderiv(theShader, GL_COMPILE_STATUS, &result);
-    if (!result)
-    {
-        glGetShaderInfoLog(theShader, sizeof(eLog), NULL, eLog);
-        fprintf(stderr, "Error compiling the %d shader: '%s'\n", shaderType, eLog);
-        return;
-    }
-
-    glAttachShader(theProgram, theShader);
-}
-
-
-void CompileShaders()
-{
-    shader = glCreateProgram();
-
-    if (!shader)
-    {
-        printf("error creating shadert program");
-        return;
-    }
-
-    AddShader(shader, vShader, GL_VERTEX_SHADER);
-
-    AddShader(shader, fShader, GL_FRAGMENT_SHADER);
-
-
-    GLint result = 0;
-    GLchar eLog[1024] = { 0 };
-
-    //create the exe on the graphics cards
-    //link them 
-    glLinkProgram(shader);
-    glGetProgramiv(shader, GL_LINK_STATUS, &result);
-
-    if (!result)
-    {
-        glGetProgramInfoLog(shader,sizeof(eLog), NULL, eLog);
-        printf("Error Linking Program: '%s'\n", eLog);
-        return;
-    }
-    //now validate them
-    glValidateProgram(shader);
-    glGetProgramiv(shader, GL_VALIDATE_STATUS, &result);
-
-    if (!result)
-    {
-        glGetProgramInfoLog(shader, sizeof(eLog), NULL, eLog);
-        printf("Error Validating Program: '%s'\n", eLog);
-        return;
-    }
-
-    //get location/id of uniform variable
-    uniformModel = glGetUniformLocation(shader, "model");
-    //get the address/id of the worldProjection and place it in the uniformProjection variable
-    uniformProjection = glGetUniformLocation(shader, "worldProjection");
-}
 
 int main()
 {
 
+    window = MyWindow(800,600);
+    window.Init();
 
-
-    //initialize glfw
-    if (!glfwInit())
-    {
-        printf("GLFW initialization failed");
-        glfwTerminate();
-        return 1;
-    }
-    //set up glfw window properties
-    //opengl version... we are using 3.3
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    //preventing any deprecated libs to be used... no backwards compatibility
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    //allowing forwards compatabilty
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT,GL_TRUE);
-
-    //create window
-    GLFWwindow* mainWindow = glfwCreateWindow(WIDTH, HEIGHT, "Test Window", NULL, NULL);
-    if (!mainWindow)
-    {
-        printf("GLFW window create failed");
-        glfwTerminate();
-        return 1;
-    }
-    //get buffer size information
-    int bufferWidth, bufferHeight;
-    //window address, buffer width and height address
-    glfwGetFramebufferSize(mainWindow, &bufferWidth, &bufferHeight);
-
-    //set context for GLEW to use... if we have multiple windows we can switch between windows to identify the context
-    glfwMakeContextCurrent(mainWindow);
-
-    //allow modern extension features..
-    glewExperimental = GL_TRUE;
-
-    //initialize glew
-    if (glewInit() != GLEW_OK)
-    {
-        printf("GLEW initiazlietion failed");
-        glfwDestroyWindow(mainWindow);
-        glfwTerminate();
-        return 1;
-    }
-
-    //initailze depth test so the screen can determine which vertext should be behind vs in front
-    glEnable(GL_DEPTH_TEST);
-    //setup our viewport size
-    //this is the buffer viewport the other width and heighth is for the window
-    glViewport(0,0,bufferWidth,bufferHeight);
-    //BTV62LZF
-    // 2D4PGMZW
-    // 
     //create triangle
-    CreateTriangle();
+    CreateObject();
     //compile shader
-    CompileShaders();
+    CreateShader();
+
+    GLuint uniformProjection = 0, uniformModel = 0;
+
     //loop until window closed
-    //make the project...we will not need to recreate the projection so we dont put it in the while loop/game loop
-    //this makes ure everything is takin ginto consierdation the aspect ratio
-    glm::mat4 projection = glm::perspective(45.0f, (GLfloat)bufferWidth/(GLfloat)bufferHeight,0.1f,100.0f);
-    while (!glfwWindowShouldClose(mainWindow))
+    glm::mat4 projection = glm::perspective(45.0f, window.GetBufferWidth()/window.GetBuggerHeight(), 0.1f, 100.0f);
+    while (!window.getShouldClose())
     {
         //get and handle user input events
         glfwPollEvents();
@@ -279,7 +100,10 @@ int main()
         
 
         glUseProgram(shader);
+        shaderList[0]->UseShader();
 
+        uniformModel = shaderList[0]->GetModelLocation();
+        uniformProjection = shaderList[0]->GetProjectionLocation();
         //glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 model(1.0f);
         //modifying the model
@@ -297,29 +121,12 @@ int main()
         glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
 
 
-        //this is where you can use the shader
-
-        glBindVertexArray(VAO);
-
-        //we are not drawing the arrays anymore
-        //glDrawArrays(GL_TRIANGLES,0,3);
-
-        //bind ibo
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,IBO);
-        //draw the element not based on arrays but based on the element ids
-                                   //count of indeces//the size of type
-        glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
-        //unbind
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        
-
-        glBindVertexArray(0);
-
+        meshList[0]->RenderMesh();
         //this is where you unassign the shader
         glUseProgram(0);
 
         //there is two buffers... one you can see and one you are drawing to
-        glfwSwapBuffers(mainWindow);
+        window.SwapBuffers();
 
 
     }
@@ -335,9 +142,11 @@ quickly estimatng/calculating with normal map.
 * 
 * index draws:
 * predefined indexes to reuse so we dont have to defin every vertices.
+* //this basically builds a library of points that we can reused existing vertices.. this is helpful when you think of a model that is made up of triangles
+* if you have to duplicate each vertices in your buffer that is to be so many vertices so instead we just use one index for a point in a triangle
 * 
 * projections:
-* how things are visualized. view to change from view space to clip space using coordinat systems
+* how things are visualized. view to change from view space to clip space use coordinat systems
 * previously we used local space
 * we are going to use projection to make view space which is the position of vertices in world space
 * view space position in the world in relation to the camera by mutiplying it by view matrix
@@ -346,4 +155,20 @@ quickly estimatng/calculating with normal map.
 
 
 frustum is the dined are we want to see. its the truncated pyramid
+
+//***a uniformed variable will be the same instance for every vertex***
+
+
+//vertex shaders:
+//allows us to manipulate the vertices and pass them off to the fragmebnt shader
+// using the out keyword lets up output/return a value from the shader to the cpp file
+// //i think the vertex is saying to each vertext... whatever your pos is... take the clamped value color of that point
+
+
+
+//fragment shader:
+//handinling each pixel on the screen and how it works with the vertices
+//we dont pass anything directly anything to the vertext shader normally
+//we pass it to the vertext shader and the fragment shader picks up the result
+        //fShader only has 1 output value normally so whater you call the out varaible it will assume that is your output value
 */
