@@ -26,7 +26,17 @@ void Mesh::CreateMesh(GLfloat *vertices, unsigned *indeces, unsigned numVertices
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0])* numVertices, vertices, GL_STATIC_DRAW);
     //location         //which value, how many values, what kind of value,normalize, stride, offest for starting value
     // //stride: i think that means splicing data with addiotnal data cause you can data pack by making odds a vluae for one things and even value means another
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);//i think this is using pointer arithmetic to demermine how many vertext/ how to sequence through the elements in the array.... in this argument its saying get three at  a time
+    
+    //we are adding UV mapping for the texture so we need to provide an offset/ step value so that it will skip certain values in the vertices[]
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 5, 0);
+    glEnableVertexAttribArray(0);
+    //this is mapped to the layout section... attribute 1 is the texture coordinates
+    glVertexAttribPointer(1, 2,GL_FLOAT,GL_FALSE,sizeof(vertices[0])*5,(void*)(sizeof(vertices[0])*3));//the vertex shader is reading based off the index the attricbute pointer is pointing to. it is getting the numbers and outputting them. the fragment shader is then inputtung them and reading the uv coords 
+    //this is getting the vertex array id referencing the first int in attribPointer above
+    glEnableVertexAttribArray(1);
+
+    
     //we want to enable an array usage to work
     glEnableVertexAttribArray(0);
     //binding the array to nothing

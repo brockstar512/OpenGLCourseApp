@@ -1,5 +1,6 @@
 // OpenGLCourseApp.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
+#define STB_IMAGE_IMPLEMENTATION
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -13,16 +14,18 @@
 #include "Shader.h"
 #include "MyWindow.h"
 #include "Camera.h"
-
+#include "Texture.h"
 Camera camera;
 const float toRadians = 3.14159265f / 180.0f;
 GLuint shader;
 std::vector<Mesh*> meshList;
 std::vector<Shader*> shaderList;
 MyWindow window;
-//not a gint or gfloat because these are not being passed to the shaders
-float currAngle = 0.0f;
-float toScale = 0.4f;
+
+//textures
+Texture brickTexture;
+Texture dirtTexture;
+
 
 //vertex shader
 static const char* vShader = "Shaders/shader.vert";
@@ -58,21 +61,48 @@ void CreateObject()
     };
 
 
+
     //define points of VAOs
+    /*
+    0,0 is the bottom left of the texture
+    1,0 is the bottom right of the texture
+    0,1 is the top left of the texture
+    1,1 is the top right of the texture
+    //.5 is going to be the center so we are cutting out a tringle 
+    */
+    GLfloat vertices[] = {
+        // vertext coordinates
+        //                      texture coordinates
+        //x     y   z           u   v
+        -1.0f, -1.0f, 0.0f,     0.0f, 0.0f,
+        0.0f, -1.0f, 1.0f,      0.5f, 0.0f,
+        1.0f, -1.0f, 0.0f,      1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,       0.5f, 1.0f,
+    };
+    /*
+    //define points of VAOs
+    //i think each of them are the vertex buffers
+    //but we are packing additional attributes above
+    // we are now adding textures and telling the attribute pointer where to read them based off the index of the array
+    //so we can't use this anymore
     GLfloat vertices[] = {
         -1.0f,-1.0f,0.0f,
-        0.0f,-1.0f,1.0f,
+        0.0f,-1.0f,1.0f, 
         1.0f,-1.0f,0.0f,
         0.0f,1.0f,0.0f
     };
+    */
+
+
+
     //center of screen is 0,0 in opengl
 
     Mesh* obj1 = new Mesh();
-    obj1->CreateMesh(vertices, indices, 12, 12);
+    obj1->CreateMesh(vertices, indices, 20, 12);
     meshList.push_back(obj1);
 
     Mesh* obj2 = new Mesh();
-    obj2->CreateMesh(vertices, indices, 12, 12);
+    obj2->CreateMesh(vertices, indices, 20, 12);
     meshList.push_back(obj2);
 
 }
@@ -81,7 +111,7 @@ void CreateObject()
 int main()
 {
 
-    window = MyWindow(800,600);
+    window = MyWindow(800, 600);
     window.Init();
 
     //create triangle
@@ -90,13 +120,20 @@ int main()
     CreateShader();
     //camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), 90.0f, 0.0f, 5.0f, 0.1f);//this was making it go crazy... the world up was inverted and the yaw was inverted
 
-   camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.075f);
+    camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.075f);
 
+    //create the textures
+    brickTexture = Texture("Textures/brick.png");
+    brickTexture.LoadTexture();
+    dirtTexture = Texture("Textures/dirt.png");
+    dirtTexture.LoadTexture();
+
+    
 
     GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0;
 
     //loop until window closed
-    glm::mat4 projection = glm::perspective(45.0f, window.GetBufferWidth()/window.GetBuggerHeight(), 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(45.0f, window.GetBufferWidth() / window.GetBuggerHeight(), 0.1f, 100.0f);
     while (!window.getShouldClose())
     {
         GLfloat now = glfwGetTime(); // SDL_GetPerformanceCounter();
@@ -111,10 +148,10 @@ int main()
 
 
         //clear window
-        glClearColor(0.0f, 0.0f,0.0f,1.0f);//these values are the color/256
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);//these values are the color/256
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);//now it's clearing both the depth and buffer bit via the bitwaise p[erator
-        
-        
+
+
         glUseProgram(shader);
         shaderList[0]->UseShader();
 
@@ -133,6 +170,8 @@ int main()
         glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
         //pass in the variable
         glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.CalculateViewMatrix()));
+        //we will draw the texture onto whatever texture is being references here before we render the texture
+        brickTexture.UseTexture();
 
         meshList[0]->RenderMesh();
 
@@ -140,9 +179,10 @@ int main()
         model = glm::translate(model, glm::vec3(0.0f, 1.0f, -2.5f));
         model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
         glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+        dirtTexture.UseTexture();
         meshList[1]->RenderMesh();
 
-     
+
 
         //this is where you unassign the shader
         glUseProgram(0);
@@ -152,8 +192,33 @@ int main()
 
 
     }
+
     //std::cout << "Hello World!\n";
 
-    //i could delete pointers here if i want them...
 }
+
+
+    //projection matrix: matrix that converts items into a normalized matrix that determines what is rendered and what is culled (our vertex positions are multiplied by our projection matrix and thats what gives us the normliazed value)
+
+    //opengl: everythihng you assign in open gl will recieve an id for objects stored on gpu
+
+    //vertex array object (VAOS): VAOs -is an object which contains one or more Vertex Buffer Objects and is designed to store the information for a complete rendered object.
+
+    //vertex buffer objects (VBOS): a buffer of memory in our gpus video ram. we are going to reserve the mrmory on our device so that we can refence it. once we create a buffer, we bind it (seletced it to work onit), tell it how big the buffer should be to reserve the data for the object, then we draw to it in the loop...VBOS Store the “contents” of vertex attribute or index arrays
+
+    //VAO vs VBO: A VBO is a buffer of memory which the gpu can access. That's all it is. A VAO is an object that stores vertex bindings. This means that when you call glVertexAttribPointer and friends to describe your vertex format that format information gets stored into the currently bound VAO.
+
+    //vertex attribute(this is important for the function: glVertexAttribPointer in mesh): what is contained in the bvertex buffer... what is in it and how its laid/sliced out because we are packing in our buffer. Vertex attribute is a property of a vertex, e.g. its position, colour, texture coordinate, etc. Vertex attributes specify where and how each property is stored in a vertex buffer, so a shader can access them properly.
+
+    //index buffer objects (IBO): (think of a sqaure how a sqaure is two triangles and the twotringles will be using the inside touching vertexs) The concept of Index buffers is that certain vertices are shared across faces, hence can be reused to save space of duplicated verticies.
+
+    //uniforms: A uniform is a global Shader variable declared with the "uniform" storage qualifier. These act as parameters that the user of a shader program can pass to that program.
+
+    //texel: texture pixel on a texture map
+
+    //mipmap: resolotuion limitations for textures. some textures are not intended to be view that close up, so mipmapping determines how far away you are and which size version of that calculated texture to use.
+
+    //shader: code that runs on the GPU.
+
+    //sampler: textures in shaders are accessed via samplers. textures are attached to a texture unit and have an id. the sampler access ther texture unit by the id.
 

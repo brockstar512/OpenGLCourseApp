@@ -8,10 +8,13 @@
 *.vsidx
 *.opendb
 *.log
+*.tlog
+*.ipch
 v17/
 *.VS
 .vs
-Debug/
+/Debug/
+\Debug
 # Compiled Object files
 *.slo
 *.lo
@@ -41,3 +44,4 @@ Debug/
 *.exe
 *.out
 *.app
+.vs/OpenGLCourseApp/v17/ipch/AutoPCH/b2827dc05d463c88/MAIN.ipch
