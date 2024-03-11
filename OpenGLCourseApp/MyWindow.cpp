@@ -2,12 +2,30 @@
 
 MyWindow::MyWindow()
 {
+    width = 800;
+    height = 600;
+
+    for (size_t i = 0; i < 1024; i++)
+    {
+        keys[i] = 0;
+    }
+
+    xChange = 0.0f;
+    yChange = 0.0f;
 }
 
 MyWindow::MyWindow(GLint windowWidth, GLint windowHeight)
 {
-	width = windowWidth;
-	height = windowHeight;
+    width = windowWidth;
+    height = windowHeight;
+
+    for (size_t i = 0; i < 1024; i++)
+    {
+        keys[i] = 0;
+    }
+
+    xChange = 0.0f;
+    yChange = 0.0f;
 }
 
 int MyWindow::Init()
@@ -44,6 +62,12 @@ int MyWindow::Init()
     //set context for GLEW to use... if we have multiple windows we can switch between windows to identify the context
     glfwMakeContextCurrent(window);
 
+    //handle key + mouse input
+    CreateCallbacks();
+
+    //lock mouse to screen
+    glfwSetInputMode(window,GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
     //allow modern extension features..
     glewExperimental = GL_TRUE;
 
@@ -61,10 +85,84 @@ int MyWindow::Init()
     //setup our viewport size
     //this is the buffer viewport the other width and heighth is for the window
     glViewport(0, 0, bufferWidth, bufferHeight);
+
+
+    //**SETTING THE WINDOW**
+    //asssign a user pointer to the window being used
+    //because its a static function, it wont be able to tell which window called it because its not attached to the object.
+    //we need to send the winow we want, so we need to assign the window for it by setting it as the window user pointer
+    //so the function wont know which object called the Handle keys function. it will have a pointer to the object because we set it as the window user pointer
+    glfwSetWindowUserPointer(window,this);
+}
+
+GLfloat MyWindow::GetXChange()
+{
+    GLfloat theChange = xChange;
+    xChange = 0.0f;
+    return theChange;
+}
+
+GLfloat MyWindow::GetYChange()
+{
+    GLfloat theChange = yChange;
+    yChange = 0.0f;
+    return theChange;
 }
 
 MyWindow::~MyWindow()
 {
     glfwDestroyWindow(window);
     glfwTerminate();
+}
+
+void MyWindow::CreateCallbacks()
+{
+    //when the key is pressed on a window call this function;
+    glfwSetKeyCallback(window, HandleKeys);
+    glfwSetCursorPosCallback(window,HandleMouse);
+}
+
+void MyWindow::HandleKeys(GLFWwindow* window, int key, int code, int action, int mode)
+{
+    //get the window that called the static function
+    MyWindow* theWindow = static_cast<MyWindow*>(glfwGetWindowUserPointer(window));
+
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    {
+        glfwSetWindowShouldClose(window, GL_TRUE);
+    }
+
+    if (key >= 0 && key < 1024)
+    {
+        if (action == GLFW_PRESS)
+        {
+            theWindow->keys[key] = true;
+        }
+        else if (action == GLFW_RELEASE)
+        {
+            theWindow->keys[key] = false;
+        }
+    }
+}
+
+
+void MyWindow::HandleMouse(GLFWwindow* window, double xPos, double yPos)
+{
+    MyWindow* theWindow = static_cast<MyWindow*>(glfwGetWindowUserPointer(window));
+
+    if (theWindow->mouseFirstMove)
+    {
+        theWindow->lastX = xPos;
+        theWindow->lastY = yPos;
+        theWindow->mouseFirstMove = false;
+    }
+
+    theWindow->xChange = xPos - theWindow->lastX;
+    //make sure its not invertted
+    theWindow->yChange = theWindow->lastY - yPos;
+
+    theWindow->lastX = xPos;
+    theWindow->lastY = yPos;
+
+    //printf("x:%.6f , y:%.6f \n", theWindow->xChange, theWindow->yChange);
 }

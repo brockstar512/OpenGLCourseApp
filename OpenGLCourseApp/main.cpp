@@ -12,8 +12,9 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "MyWindow.h"
-//window dimensions
+#include "Camera.h"
 
+Camera camera;
 const float toRadians = 3.14159265f / 180.0f;
 GLuint shader;
 std::vector<Mesh*> meshList;
@@ -27,7 +28,12 @@ float toScale = 0.4f;
 static const char* vShader = "Shaders/shader.vert";
 //fragment shader
 static const char* fShader = "Shaders/shader.frag";
-
+GLfloat deltaTime = 0.0f;
+GLfloat lastTime = 0.0f;
+//deltatime = current time - lasttime
+//then multiply the camera speed by deltaTime
+// 
+//three types of angles: pitch -> up and down yaw -> left and right roll-> rotation around the axis
 
 void CreateShader()
 {
@@ -62,8 +68,12 @@ void CreateObject()
     //center of screen is 0,0 in opengl
 
     Mesh* obj1 = new Mesh();
-    obj1->CreateMesh(vertices, indices,12,12);
+    obj1->CreateMesh(vertices, indices, 12, 12);
     meshList.push_back(obj1);
+
+    Mesh* obj2 = new Mesh();
+    obj2->CreateMesh(vertices, indices, 12, 12);
+    meshList.push_back(obj2);
 
 }
 
@@ -78,50 +88,62 @@ int main()
     CreateObject();
     //compile shader
     CreateShader();
+    //camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), 90.0f, 0.0f, 5.0f, 0.1f);this was making it go crazy... the world up was inverted and the yaw was inverted
 
-    GLuint uniformProjection = 0, uniformModel = 0;
+   camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.075f);
+
+
+    GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0;
 
     //loop until window closed
     glm::mat4 projection = glm::perspective(45.0f, window.GetBufferWidth()/window.GetBuggerHeight(), 0.1f, 100.0f);
     while (!window.getShouldClose())
     {
+        GLfloat now = glfwGetTime(); // SDL_GetPerformanceCounter();
+        deltaTime = now - lastTime; // (now - lastTime)*1000/SDL_GetPerformanceFrequency();
+        lastTime = now;
+
         //get and handle user input events
         glfwPollEvents();
 
-        currAngle += 1.0f;
-        if (currAngle >= 360)
-        {
-            currAngle -= 360;
-        }
+        camera.KeyControl(window.GetKeys(), deltaTime);
+        camera.MouseControl(window.GetXChange(), window.GetYChange());
+
 
         //clear window
         glClearColor(0.0f, 0.0f,0.0f,1.0f);//these values are the color/256
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);//now it's clearing both the depth and buffer bit via the bitwaise p[erator
         
-
+        
         glUseProgram(shader);
         shaderList[0]->UseShader();
 
         uniformModel = shaderList[0]->GetModelLocation();
         uniformProjection = shaderList[0]->GetProjectionLocation();
+        //get the uniform variabel here (1)
+        uniformView = shaderList[0]->GetViewLocation();
         //glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 model(1.0f);
         //modifying the model
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));//push the trangle away from you
-        //put it back into the model after you changed the model...rotate on the y axix
-        model = glm::rotate(model, currAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(toScale, toScale, 1.0f));
 
 
-        //assign uniform shader
-        //glUniform1f(uniformXMove, triOffset);
-        //we dont put it the model directly. we put in the address of the model
-        glUniformMatrix4fv(uniformModel,1,GL_FALSE,glm::value_ptr(model));
-
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
+        model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
-
+        //pass in the variable
+        glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.CalculateViewMatrix()));
 
         meshList[0]->RenderMesh();
+
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 1.0f, -2.5f));
+        model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+        meshList[1]->RenderMesh();
+
+     
+
         //this is where you unassign the shader
         glUseProgram(0);
 
@@ -131,44 +153,7 @@ int main()
 
     }
     //std::cout << "Hello World!\n";
+
+    //i could delete pointers here if i want them...
 }
 
-
-/*
-* interpolation:
-* how the fragment shader interpolates the points between the vertices. happens during the rasterization stage during the render. 
-quickly estimatng/calculating with normal map.
-* 
-* 
-* index draws:
-* predefined indexes to reuse so we dont have to defin every vertices.
-* //this basically builds a library of points that we can reused existing vertices.. this is helpful when you think of a model that is made up of triangles
-* if you have to duplicate each vertices in your buffer that is to be so many vertices so instead we just use one index for a point in a triangle
-* 
-* projections:
-* how things are visualized. view to change from view space to clip space use coordinat systems
-* previously we used local space
-* we are going to use projection to make view space which is the position of vertices in world space
-* view space position in the world in relation to the camera by mutiplying it by view matrix
-* clip space is clipping  out what we dont want to see
-* screen space is the final image and projected onto the window itself
-
-
-frustum is the dined are we want to see. its the truncated pyramid
-
-//***a uniformed variable will be the same instance for every vertex***
-
-
-//vertex shaders:
-//allows us to manipulate the vertices and pass them off to the fragmebnt shader
-// using the out keyword lets up output/return a value from the shader to the cpp file
-// //i think the vertex is saying to each vertext... whatever your pos is... take the clamped value color of that point
-
-
-
-//fragment shader:
-//handinling each pixel on the screen and how it works with the vertices
-//we dont pass anything directly anything to the vertext shader normally
-//we pass it to the vertext shader and the fragment shader picks up the result
-        //fShader only has 1 output value normally so whater you call the out varaible it will assume that is your output value
-*/

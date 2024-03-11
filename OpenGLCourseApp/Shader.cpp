@@ -47,6 +47,11 @@ GLuint Shader::GetModelLocation()
     return uniformModel;
 }
 
+GLuint Shader::GetViewLocation()
+{
+    return uniformView;
+}
+
 void Shader::UseShader()
 {
     glUseProgram(shaderID);
@@ -111,6 +116,8 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
     uniformModel = glGetUniformLocation(shaderID, "model");
     //get the address/id of the worldProjection and place it in the uniformProjection variable
     uniformProjection = glGetUniformLocation(shaderID, "worldProjection");//this is to get the order when vertices are ontop if eachother
+    //we get the uniform view from the shader from view.... the view variable is the uniform variable we place inthe shader.vert file
+    uniformView = glGetUniformLocation(shaderID, "view");
 }
 
 void Shader::AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
