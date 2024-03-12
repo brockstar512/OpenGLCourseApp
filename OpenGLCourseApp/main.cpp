@@ -200,9 +200,9 @@ int main()
 
     //projection matrix: matrix that converts items into a normalized matrix that determines what is rendered and what is culled (our vertex positions are multiplied by our projection matrix and thats what gives us the normliazed value)
 
-    //opengl: everythihng you assign in open gl will recieve an id for objects stored on gpu
+    //opengl: everythihng you assign in open gl will recieve an id for objects stored on gpu. opengl is a graphics plugin api used to interface with the gpu while sdl is a framework.sdl offers access to audio, keyboard, and mouse controlls.GLFW is a utility library for opengl that allows for the things offered by SDL like window management and keyboard/mouses inputs. glew just helps to figure out which version of OpenGL and which extensions are supported and loads their function pointers so you can easily use them.
 
-    //vertex array object (VAOS): VAOs -is an object which contains one or more Vertex Buffer Objects and is designed to store the information for a complete rendered object.
+    //vertex array object (VAOS): VAOs -is an object which contains one or more Vertex Buffer Objects and is designed to store the information for a complete rendered object. 
 
     //vertex buffer objects (VBOS): a buffer of memory in our gpus video ram. we are going to reserve the mrmory on our device so that we can refence it. once we create a buffer, we bind it (seletced it to work onit), tell it how big the buffer should be to reserve the data for the object, then we draw to it in the loop...VBOS Store the “contents” of vertex attribute or index arrays
 
@@ -221,4 +221,17 @@ int main()
     //shader: code that runs on the GPU.
 
     //sampler: textures in shaders are accessed via samplers. textures are attached to a texture unit and have an id. the sampler access ther texture unit by the id.
+
+    //phong lighting: These combined create phong lighting model
+            //ambient lighting: the lighting that is always present.
+            //diffuse lighting: light determined by direction of light soruce. creates faded effect further away from light source.
+            //specular lighting: light reflection from the source to the viewers eye.
+
+    //diffuse lighting: cross product between the normal and the light source to determine the lighting. higher the theta the dimmer the diffuse factor
+    
+    //phong shading: average of the normals on each vector with the use of interpoloation. we can use normalize matrix to scale the normls to prevent skewing
+
+    //specular lighting: we need four things to show reflection... view vector (what angle are we viewing the shape) reflection vector (light vector reflected around normal), normal vector, light vector. we use the light source and the normal to determine the light reflection. then we can get the vewier and determine the theat between the viewer and the light reclection  angle. smaller theta more light. higher theat less light. the specular factor is the dot product to the exponent facor of the shinienss. the shiniess will be kept by the material
+
+
 

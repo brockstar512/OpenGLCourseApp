@@ -54,8 +54,7 @@
               "RelativeToolTip": "OpenGLCourseApp\\Texture.h",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAPAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-03-11T19:23:08.891Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-03-11T19:23:08.891Z"
             },
             {
               "$type": "Document",
@@ -65,7 +64,7 @@
               "RelativeDocumentMoniker": "OpenGLCourseApp\\Texture.cpp",
               "ToolTip": "C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\Texture.cpp",
               "RelativeToolTip": "OpenGLCourseApp\\Texture.cpp",
-              "ViewState": "AQIAAC0AAAAAAAAAAAAAADgAAAAPAAAA",
+              "ViewState": "AQIAAC0AAAAAAAAAAAAAAEsAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-03-11T19:21:16.875Z",
               "EditorCaption": ""
@@ -80,8 +79,7 @@
               "RelativeToolTip": "OpenGLCourseApp\\Mesh.cpp",
               "ViewState": "AQIAABAAAAAAAAAAAAAEwBwAAACOAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-03-11T16:57:59.402Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-03-11T16:57:59.402Z"
             },
             {
               "$type": "Document",
@@ -93,8 +91,7 @@
               "RelativeToolTip": "OpenGLCourseApp\\main.cpp",
               "ViewState": "AQIAAM8AAAAAAAAAAAAAAOAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-03-11T05:07:43.265Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-03-11T05:07:43.265Z"
             },
             {
               "$type": "Document",
@@ -106,8 +103,7 @@
               "RelativeToolTip": "OpenGLCourseApp\\Camera.cpp",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAvAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-03-11T04:42:31.79Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-03-11T04:42:31.79Z"
             },
             {
               "$type": "Document",
@@ -143,8 +139,7 @@
               "RelativeToolTip": "OpenGLCourseApp\\Shader.cpp",
               "ViewState": "AQIAAEwAAAAAAAAAAAAWwGcAAAAXAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-03-08T17:38:17.355Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-03-08T17:38:17.355Z"
             }
           ]
         }
