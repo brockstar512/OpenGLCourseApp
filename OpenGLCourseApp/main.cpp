@@ -15,6 +15,7 @@
 #include "MyWindow.h"
 #include "Camera.h"
 #include "Texture.h"
+#include "Light.h"
 Camera camera;
 const float toRadians = 3.14159265f / 180.0f;
 GLuint shader;
@@ -26,6 +27,8 @@ MyWindow window;
 Texture brickTexture;
 Texture dirtTexture;
 
+//light
+Light mainLight;
 
 //vertex shader
 static const char* vShader = "Shaders/shader.vert";
@@ -128,9 +131,9 @@ int main()
     dirtTexture = Texture("Textures/dirt.png");
     dirtTexture.LoadTexture();
 
-    
+    mainLight = Light(1.0f,1.0f,1.0f,0.5f);
 
-    GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0;
+    GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformAmbientIntensity = 0, uniformAmbientColour = 0;
 
     //loop until window closed
     glm::mat4 projection = glm::perspective(45.0f, window.GetBufferWidth() / window.GetBuggerHeight(), 0.1f, 100.0f);
@@ -157,13 +160,17 @@ int main()
 
         uniformModel = shaderList[0]->GetModelLocation();
         uniformProjection = shaderList[0]->GetProjectionLocation();
-        //get the uniform variabel here (1)
+        
         uniformView = shaderList[0]->GetViewLocation();
+        uniformAmbientIntensity = shaderList[0]->GetAmbientIntensity();
+        uniformAmbientColour = shaderList[0]->GetAmbientColorLocation();
+
+        mainLight.UseLight(uniformAmbientIntensity, uniformAmbientColour);
         //glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 model(1.0f);
         //modifying the model
 
-
+        //get the uniform variabel here (1)
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
         model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
         glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -232,6 +239,15 @@ int main()
     //phong shading: average of the normals on each vector with the use of interpoloation. we can use normalize matrix to scale the normls to prevent skewing
 
     //specular lighting: we need four things to show reflection... view vector (what angle are we viewing the shape) reflection vector (light vector reflected around normal), normal vector, light vector. we use the light source and the normal to determine the light reflection. then we can get the vewier and determine the theat between the viewer and the light reclection  angle. smaller theta more light. higher theat less light. the specular factor is the dot product to the exponent facor of the shinienss. the shiniess will be kept by the material
+
+    //type of light: 
+    // directional light: light without position or source. all light coming as parralel. often represents the sun
+    // point light: light bulb. shines in all direction from a specific position.
+    // spot light:light emittied from a specific point with a certain range and direction
+    // area light: large light area that emits from a specific area
+
+    
+
 
 
 
