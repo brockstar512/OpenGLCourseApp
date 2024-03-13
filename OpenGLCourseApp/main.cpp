@@ -73,6 +73,7 @@ void CalculateAverageNormals(unsigned int* indices, unsigned int indiceCount, GL
         glm::vec3 v1(vertices[in1] - vertices[in0], vertices[in1 + 1] - vertices[in0 + 1], vertices[in1 + 2] - vertices[in0 + 2]);
         glm::vec3 v2(vertices[in2] - vertices[in0], vertices[in2 + 1] - vertices[in0 + 1], vertices[in2 + 2] - vertices[in0 + 2]);
         glm::vec3 normal = glm::cross(v1, v2);
+        normal = glm::normalize(normal);
 
         //the n1s and n0s are pointing to the start of each rows in vertices... we are adding a normal offset to get the normal of that row
         in0 += normalOffset;
@@ -198,8 +199,8 @@ int main()
     dirtTexture.LoadTexture();
 
     //mainLight = Light(1.0f,1.0f,1.0f,0.5f);
-    mainLight = Light(1.0f, 1.0f, 1.0f, 0.2f
-        ,0.2f, -1.0f, -2.0f,1.0f);
+    mainLight = Light(1.0f, 1.0f, 1.0f, 0.2f,
+        2.0f, -1.0f, -2.0f, 1.0f);
 
     GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformAmbientIntensity = 0, uniformAmbientColour = 0,uniformDiffusionIntensity = 0, uniformDirection = 0;
 
@@ -237,6 +238,7 @@ int main()
         //        mainLight.UseLight(uniformAmbientIntensity, uniformAmbientColour);
 
         mainLight.UseLight(uniformAmbientIntensity, uniformAmbientColour,uniformDiffusionIntensity,uniformDirection);
+
         //glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 model(1.0f);
         //modifying the model
