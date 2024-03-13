@@ -10,6 +10,6 @@ public:
 private:
 	GLuint VAO, VBO, IBO = 0;
 	GLsizei indexCount = 0;
-	
+	const int vertextDataPointsPerEntry = 8;
 };
 

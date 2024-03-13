@@ -29,12 +29,20 @@ void Mesh::CreateMesh(GLfloat *vertices, unsigned *indeces, unsigned numVertices
     //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);//i think this is using pointer arithmetic to demermine how many vertext/ how to sequence through the elements in the array.... in this argument its saying get three at  a time
     
     //we are adding UV mapping for the texture so we need to provide an offset/ step value so that it will skip certain values in the vertices[]
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 5, 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * vertextDataPointsPerEntry, 0);
     glEnableVertexAttribArray(0);
     //this is mapped to the layout section... attribute 1 is the texture coordinates
-    glVertexAttribPointer(1, 2,GL_FLOAT,GL_FALSE,sizeof(vertices[0])*5,(void*)(sizeof(vertices[0])*3));//the vertex shader is reading based off the index the attricbute pointer is pointing to. it is getting the numbers and outputting them. the fragment shader is then inputtung them and reading the uv coords 
+    glVertexAttribPointer(1, 2,GL_FLOAT,GL_FALSE,sizeof(vertices[0])* vertextDataPointsPerEntry,(void*)(sizeof(vertices[0])*3));//the vertex shader is reading based off the index the attricbute pointer is pointing to. it is getting the numbers and outputting them. the fragment shader is then inputtung them and reading the uv coords 
+    //above is saying the 3 because that is the index the  texture uvs is still 3 in
+    
     //this is getting the vertex array id referencing the first int in attribPointer above
     glEnableVertexAttribArray(1);
+
+              //layout (location = 2) in vec3 norm;            
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * vertextDataPointsPerEntry, (void*)(sizeof(vertices[0]) * 5));
+    //enable the array
+    glEnableVertexAttribArray(2);
+
 
     
     //we want to enable an array usage to work

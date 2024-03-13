@@ -41,11 +41,73 @@ GLfloat lastTime = 0.0f;
 // 
 //three types of angles: pitch -> up and down yaw -> left and right roll-> rotation around the axis
 
+/*
+* //if i want to use an object
+void CreateShaders()
+{
+    //creating shader on the heap
+    Shader *shader1 = new Shader();
+    //creating the file
+    shader1->CreateFromFiles(vShader, fShader);
+    //copying it intot he list and drefrerning it
+    shaderList.push_back(*shader1);
+}*/
 void CreateShader()
 {
     Shader* shader1 = new Shader();
     shader1->CreateFromFile(vShader,fShader);
     shaderList.push_back(shader1);
+}
+void CalculateAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticesCount, unsigned int vertexLength, unsigned int normalOffset)
+{
+    //printf("how much are we skipping vertex Length: %u \n", vertexLength);//      8
+    
+    //these numbers are so we can jump around our vertices and indeces much easier...?
+    for (size_t i = 0; i < indiceCount; i += 3)
+    {
+        unsigned int in0 = indices[i] * vertexLength;
+        unsigned int in1 = indices[i + 1] * vertexLength;
+        unsigned int in2 = indices[i + 2] * vertexLength;
+
+        //we are making manual lines to vertices so we can use them to calculate the cross product to find the normals
+        glm::vec3 v1(vertices[in1] - vertices[in0], vertices[in1 + 1] - vertices[in0 + 1], vertices[in1 + 2] - vertices[in0 + 2]);
+        glm::vec3 v2(vertices[in2] - vertices[in0], vertices[in2 + 1] - vertices[in0 + 1], vertices[in2 + 2] - vertices[in0 + 2]);
+        glm::vec3 normal = glm::cross(v1, v2);
+
+        //the n1s and n0s are pointing to the start of each rows in vertices... we are adding a normal offset to get the normal of that row
+        in0 += normalOffset;
+        in1 += normalOffset;
+        in2 += normalOffset;
+        //adding the normals in the respectvie place.
+        //vertex 0 which is  -1.0f, -1.0f, 0.0f,     0.0f, 0.0f,             0.0f,0.0f,0.0f, the calculations are going to be the average of 
+                                                                            //         this triangle 0,3,1, this triangle 2,3,0 and this triangle 0,1,2
+        vertices[in0] += normal.x;
+        vertices[in0 + 1] += normal.y;
+        vertices[in0 + 2] += normal.z;
+
+        vertices[in1] += normal.x;
+        vertices[in1 + 1] += normal.y;
+        vertices[in1 + 2] += normal.z;
+
+        vertices[in2] += normal.x;
+        vertices[in2 + 1] += normal.y;
+        vertices[in2 + 2] += normal.z;
+
+        for (size_t i = 0; i < verticesCount / vertexLength; i++)
+        {
+            //grabbing all the normal offsets
+            unsigned int nOffset = i * vertexLength + normalOffset;
+            //normalizing them
+            glm::vec3 vec(vertices[nOffset], vertices[nOffset + 1], vertices[nOffset + 2]);
+            vec = glm::normalize(vec);
+            //putting them back in but normalized
+            vertices[nOffset] = vec.x;
+            vertices[nOffset + 1] = vec.y;
+            vertices[nOffset + 2] = vec.z;
+        }
+
+
+    }
 }
 
 void CreateObject()
@@ -75,12 +137,12 @@ void CreateObject()
     */
     GLfloat vertices[] = {
         // vertext coordinates
-        //                      texture coordinates
-        //x     y   z           u   v
-        -1.0f, -1.0f, 0.0f,     0.0f, 0.0f,
-        0.0f, -1.0f, 1.0f,      0.5f, 0.0f,
-        1.0f, -1.0f, 0.0f,      1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,       0.5f, 1.0f,
+        //                      texture coordinates     normals
+        //x     y   z           u   v                   nx, ny nz
+        -1.0f, -1.0f, 0.0f,     0.0f, 0.0f,             0.0f,0.0f,0.0f,
+        0.0f, -1.0f, 1.0f,      0.5f, 0.0f,             0.0f,0.0f,0.0f,
+        1.0f, -1.0f, 0.0f,      1.0f, 0.0f,             0.0f,0.0f,0.0f,
+        0.0f, 1.0f, 0.0f,       0.5f, 1.0f,             0.0f,0.0f,0.0f,
     };
     /*
     //define points of VAOs
@@ -96,19 +158,23 @@ void CreateObject()
     };
     */
 
-
+    //we are passing them in as pointer so that when we alter them we and dont need to make any returns
+    //unsigned int indices[]... how many there are... the vertices... how much total data points we have in the vertices... size of each vertex data... where does the normals entrypoint start
+    CalculateAverageNormals(indices, 12, vertices,32,8,5);
 
     //center of screen is 0,0 in opengl
 
     Mesh* obj1 = new Mesh();
-    obj1->CreateMesh(vertices, indices, 20, 12);
+    obj1->CreateMesh(vertices, indices, 32, 12);
     meshList.push_back(obj1);
 
     Mesh* obj2 = new Mesh();
-    obj2->CreateMesh(vertices, indices, 20, 12);
+    obj2->CreateMesh(vertices, indices, 32, 12);
     meshList.push_back(obj2);
 
 }
+
+
 
 
 int main()
@@ -131,9 +197,11 @@ int main()
     dirtTexture = Texture("Textures/dirt.png");
     dirtTexture.LoadTexture();
 
-    mainLight = Light(1.0f,1.0f,1.0f,0.5f);
+    //mainLight = Light(1.0f,1.0f,1.0f,0.5f);
+    mainLight = Light(1.0f, 1.0f, 1.0f, 0.2f
+        ,0.2f, -1.0f, -2.0f,1.0f);
 
-    GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformAmbientIntensity = 0, uniformAmbientColour = 0;
+    GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformAmbientIntensity = 0, uniformAmbientColour = 0,uniformDiffusionIntensity = 0, uniformDirection = 0;
 
     //loop until window closed
     glm::mat4 projection = glm::perspective(45.0f, window.GetBufferWidth() / window.GetBuggerHeight(), 0.1f, 100.0f);
@@ -164,8 +232,11 @@ int main()
         uniformView = shaderList[0]->GetViewLocation();
         uniformAmbientIntensity = shaderList[0]->GetAmbientIntensity();
         uniformAmbientColour = shaderList[0]->GetAmbientColorLocation();
+        uniformDiffusionIntensity = shaderList[0]->GetDiffuseIntensityLocation(),
+        uniformDirection = shaderList[0]->GetDirectionLocation();
+        //        mainLight.UseLight(uniformAmbientIntensity, uniformAmbientColour);
 
-        mainLight.UseLight(uniformAmbientIntensity, uniformAmbientColour);
+        mainLight.UseLight(uniformAmbientIntensity, uniformAmbientColour,uniformDiffusionIntensity,uniformDirection);
         //glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 model(1.0f);
         //modifying the model
@@ -173,6 +244,11 @@ int main()
         //get the uniform variabel here (1)
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
         model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+
+        //Passing to shader.vert vs shader.frag?
+        //
+        
+        //uniformModel is getting the id throuigh the shader function GetModelLocation() that is returning the uniformProjection id from uniformModel = glGetUniformLocation(shaderID, "model");
         glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
         //pass in the variable
