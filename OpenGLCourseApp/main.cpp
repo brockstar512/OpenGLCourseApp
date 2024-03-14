@@ -16,6 +16,8 @@
 #include "Camera.h"
 #include "Texture.h"
 #include "Light.h"
+#include "Material.h"
+
 Camera camera;
 const float toRadians = 3.14159265f / 180.0f;
 GLuint shader;
@@ -30,16 +32,17 @@ Texture dirtTexture;
 //light
 Light mainLight;
 
+//Material
+Material shinyMat;
+Material dullMat;
+
 //vertex shader
 static const char* vShader = "Shaders/shader.vert";
 //fragment shader
 static const char* fShader = "Shaders/shader.frag";
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
-//deltatime = current time - lasttime
-//then multiply the camera speed by deltaTime
-// 
-//three types of angles: pitch -> up and down yaw -> left and right roll-> rotation around the axis
+
 
 /*
 * //if i want to use an object
@@ -198,11 +201,13 @@ int main()
     dirtTexture = Texture("Textures/dirt.png");
     dirtTexture.LoadTexture();
 
-    //mainLight = Light(1.0f,1.0f,1.0f,0.5f);
-    mainLight = Light(1.0f, 1.0f, 1.0f, 0.2f,
-        2.0f, -1.0f, -2.0f, 1.0f);
+    shinyMat = Material(1.0f, 32);
+    dullMat = Material(0.3f, 4);
 
-    GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformAmbientIntensity = 0, uniformAmbientColour = 0,uniformDiffusionIntensity = 0, uniformDirection = 0;
+    //mainLight = Light(1.0f,1.0f,1.0f,0.5f);
+    mainLight = Light(1.0f, 1.0f, 1.0f, 0.2f,2.0f, -1.0f, -2.0f, 0.3f);
+
+    GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformAmbientIntensity = 0, uniformAmbientColour = 0,uniformDiffusionIntensity = 0, uniformDirection = 0, uniformEyePos, uniformSpecularIntensity, uniformShinyIntesity;
 
     //loop until window closed
     glm::mat4 projection = glm::perspective(45.0f, window.GetBufferWidth() / window.GetBuggerHeight(), 0.1f, 100.0f);
@@ -235,6 +240,9 @@ int main()
         uniformAmbientColour = shaderList[0]->GetAmbientColorLocation();
         uniformDiffusionIntensity = shaderList[0]->GetDiffuseIntensityLocation(),
         uniformDirection = shaderList[0]->GetDirectionLocation();
+        uniformEyePos = shaderList[0]->GetEyeLocation();
+        uniformShinyIntesity = shaderList[0]->GetShininessLocation();
+        uniformSpecularIntensity = shaderList[0]->GetSpecularIntensityLocation();
         //        mainLight.UseLight(uniformAmbientIntensity, uniformAmbientColour);
 
         mainLight.UseLight(uniformAmbientIntensity, uniformAmbientColour,uniformDiffusionIntensity,uniformDirection);
@@ -255,9 +263,13 @@ int main()
         glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
         //pass in the variable
         glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.CalculateViewMatrix()));
+
+        glUniform3f(uniformEyePos,camera.GetCameraPosition().x, camera.GetCameraPosition().y, camera.GetCameraPosition().z);
+
+
         //we will draw the texture onto whatever texture is being references here before we render the texture
         brickTexture.UseTexture();
-
+        shinyMat.UseMaterial(uniformSpecularIntensity, uniformShinyIntesity);//we could send these directly rather than using them in main, but we are going to use them here
         meshList[0]->RenderMesh();
 
         model = glm::mat4(1.0f);
@@ -265,6 +277,7 @@ int main()
         model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
         glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
         dirtTexture.UseTexture();
+        dullMat.UseMaterial(uniformSpecularIntensity, uniformShinyIntesity);
         meshList[1]->RenderMesh();
 
 
@@ -317,12 +330,20 @@ int main()
     //phong shading: average of the normals on each vector with the use of interpoloation. we can use normalize matrix to scale the normls to prevent skewing
 
     //specular lighting: we need four things to show reflection... view vector (what angle are we viewing the shape) reflection vector (light vector reflected around normal), normal vector, light vector. we use the light source and the normal to determine the light reflection. then we can get the vewier and determine the theat between the viewer and the light reclection  angle. smaller theta more light. higher theat less light. the specular factor is the dot product to the exponent facor of the shinienss. the shiniess will be kept by the material
+                        //specular lighting is how the light reflects off the material.
 
     //type of light: 
     // directional light: light without position or source. all light coming as parralel. often represents the sun
     // point light: light bulb. shines in all direction from a specific position.
     // spot light:light emittied from a specific point with a certain range and direction
     // area light: large light area that emits from a specific area
+
+
+    //location vs uniform : uniform all vertex varaibles will be the same, location, the vertex variables will be individual
+/*
+    in one draw call, you set a uniform variable to a value that is the same for all vertices/fragments you render during this call. E.g. the position of a light, or the view_projection_matrix.
+
+    However, you probably want for every vertex different vertex positions and maybe different texture coordinates etc. For these cases you use for example layout (location = 0) in vec3 aPos;*/
 
     
 
