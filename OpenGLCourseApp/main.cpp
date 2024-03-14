@@ -42,7 +42,8 @@ static const char* vShader = "Shaders/shader.vert";
 static const char* fShader = "Shaders/shader.frag";
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
-
+const unsigned int WIDTH = 1280;
+const unsigned int HEIGHT = 728;
 
 /*
 * //if i want to use an object
@@ -143,9 +144,9 @@ void CreateObject()
         // vertext coordinates
         //                      texture coordinates     normals
         //x     y   z           u   v                   nx, ny nz
-        -1.0f, -1.0f, 0.0f,     0.0f, 0.0f,             0.0f,0.0f,0.0f,
+        -1.0f, -1.0f, -0.5f,     0.0f, 0.0f,             0.0f,0.0f,0.0f,
         0.0f, -1.0f, 1.0f,      0.5f, 0.0f,             0.0f,0.0f,0.0f,
-        1.0f, -1.0f, 0.0f,      1.0f, 0.0f,             0.0f,0.0f,0.0f,
+        1.0f, -1.0f, -0.5f,      1.0f, 0.0f,             0.0f,0.0f,0.0f,
         0.0f, 1.0f, 0.0f,       0.5f, 1.0f,             0.0f,0.0f,0.0f,
     };
     /*
@@ -184,7 +185,7 @@ void CreateObject()
 int main()
 {
 
-    window = MyWindow(800, 600);
+    window = MyWindow(WIDTH,HEIGHT);
     window.Init();
 
     //create triangle
@@ -252,8 +253,8 @@ int main()
         //modifying the model
 
         //get the uniform variabel here (1)
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
-        model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -3.5f));
+        //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
 
         //Passing to shader.vert vs shader.frag?
         //
@@ -273,8 +274,8 @@ int main()
         meshList[0]->RenderMesh();
 
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 1.0f, -2.5f));
-        model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+        model = glm::translate(model, glm::vec3(0.0f, 2.25f, -3.5f));
+        //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
         glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
         dirtTexture.UseTexture();
         dullMat.UseMaterial(uniformSpecularIntensity, uniformShinyIntesity);

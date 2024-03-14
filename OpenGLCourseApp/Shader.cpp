@@ -151,22 +151,18 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
     //get location/id of uniform variable
     uniformModel = glGetUniformLocation(shaderID, "model");
     //get the address/id of the worldProjection and place it in the uniformProjection variable
-    uniformProjection = glGetUniformLocation(shaderID, "worldProjection");//this is to get the order when vertices are ontop if eachother
+    uniformProjection = glGetUniformLocation(shaderID, "projection");//this is to get the order when vertices are ontop if eachother
     //we get the uniform view from the shader from view.... the view variable is the uniform variable we place inthe shader.vert file
     uniformView = glGetUniformLocation(shaderID, "view");
 
     //if there is a problem with the rendering and the log does not say so, there is a high chance it has to do here, where the string literal is misspelled
     uniformAmbientColor = glGetUniformLocation(shaderID, "directionalLight.colour");
-
     uniformAmbientIntensity = glGetUniformLocation(shaderID, "directionalLight.ambientIntensity");
-
-    uniformDirection = glGetUniformLocation(shaderID,"directionalLight.direction");
-
+    uniformDirection = glGetUniformLocation(shaderID, "directionalLight.direction");
     uniformDiffuseIntensity = glGetUniformLocation(shaderID, "directionalLight.diffuseIntensity");
-
-    uniformSpecularIntensity = glGetUniformLocation(shaderID,"material.specularIntensity");
-
+    uniformSpecularIntensity = glGetUniformLocation(shaderID, "material.specularIntensity");
     uniformShininess = glGetUniformLocation(shaderID, "material.shininess");
+    uniformEyePosition = glGetUniformLocation(shaderID, "eyePosition");
 }
 
 void Shader::AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
