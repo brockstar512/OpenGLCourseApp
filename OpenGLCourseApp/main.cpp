@@ -15,7 +15,7 @@
 #include "MyWindow.h"
 #include "Camera.h"
 #include "Texture.h"
-#include "Light.h"
+#include "DirectionalLight.h"
 #include "Material.h"
 
 Camera camera;
@@ -29,8 +29,9 @@ MyWindow window;
 Texture brickTexture;
 Texture dirtTexture;
 
+//Light amLight
 //light
-Light mainLight;
+DirectionalLight mainLight;
 
 //Material
 Material shinyMat;
@@ -155,8 +156,8 @@ int main()
     shinyMat = Material(1.0f, 32);
     dullMat = Material(0.3f, 4);
 
-    //mainLight = Light(1.0f,1.0f,1.0f,0.5f);
-    mainLight = Light(1.0f, 1.0f, 1.0f, 0.2f,2.0f, -1.0f, -2.0f, 0.3f);
+    //amLight = Light(1.0f,1.0f,1.0f,0.5f);
+    mainLight = DirectionalLight(1.0f, 1.0f, 1.0f, 0.1f, 0.3f, 0.0f, 0.0f, -1.0f);
 
     GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformAmbientIntensity = 0, uniformAmbientColour = 0,uniformDiffusionIntensity = 0, uniformDirection = 0, uniformEyePos, uniformSpecularIntensity, uniformShinyIntesity;
 
@@ -196,7 +197,7 @@ int main()
         uniformEyePos = shaderList[0]->GetEyeLocation();
         uniformShinyIntesity = shaderList[0]->GetShininessLocation();
         uniformSpecularIntensity = shaderList[0]->GetSpecularIntensityLocation();
-        //        mainLight.UseLight(uniformAmbientIntensity, uniformAmbientColour);
+        //        amLight.UseLight(uniformAmbientIntensity, uniformAmbientColour);
         mainLight.UseLight(uniformAmbientIntensity, uniformAmbientColour,uniformDiffusionIntensity,uniformDirection);
 
         glm::mat4 model(1.0f);
@@ -234,6 +235,8 @@ int main()
     //std::cout << "Hello World!\n";
 
 }
+
+    //    
 
     //vertex shader vs fragment shader... the program passes data to the vertex shader then the vertex shader passes data to the fragment shader
 
@@ -284,7 +287,9 @@ int main()
 /*
     in one draw call, you set a uniform variable to a value that is the same for all vertices/fragments you render during this call. E.g. the position of a light, or the view_projection_matrix.
 
-    However, you probably want for every vertex different vertex positions and maybe different texture coordinates etc. For these cases you use for example layout (location = 0) in vec3 aPos;*/
+    However, you probably want for every vertex different vertex positions and maybe different texture coordinates etc. For these cases you use for example layout (location = 0) in vec3 aPos;
+*/
+
 
     
 

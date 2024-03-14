@@ -1,14 +1,42 @@
-﻿  main.cpp
+﻿  Camera.cpp
+  DirectionalLight.cpp
+  Light.cpp
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\DirectionalLight.cpp(15,14): warning C4244: 'argument': conversion from 'GLfloat' to 'GLint', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\DirectionalLight.cpp(16,14): warning C4244: 'argument': conversion from 'GLfloat' to 'GLint', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\DirectionalLight.cpp(18,14): warning C4244: 'argument': conversion from 'GLfloat' to 'GLint', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\DirectionalLight.cpp(20,14): warning C4244: 'argument': conversion from 'GLfloat' to 'GLint', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Light.cpp(22,14): warning C4244: 'argument': conversion from 'GLfloat' to 'GLint', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Light.cpp(23,14): warning C4244: 'argument': conversion from 'GLfloat' to 'GLint', possible loss of data
+  main.cpp
 C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.h(19,36): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
   (compiling source file 'main.cpp')
   
 C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.h(20,37): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\main.cpp(217,21): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\main.cpp(249,100): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\main.cpp(249,74): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\main.cpp(249,53): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\main.cpp(249,28): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\main.cpp(170,21): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\main.cpp(201,100): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\main.cpp(201,74): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\main.cpp(201,53): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\main.cpp(201,28): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+  Mesh.cpp
+  MyWindow.cpp
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.h(19,36): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
+  (compiling source file 'MyWindow.cpp')
+  
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.h(20,37): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
+  (compiling source file 'MyWindow.cpp')
+  
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.cpp(153,28): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.cpp(154,28): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.cpp(158,31): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.cpp(160,43): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.cpp(162,24): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.cpp(163,24): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+  Shader.cpp
+  Texture.cpp
+  Generating Code...
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.cpp(94,1): warning C4715: 'MyWindow::Init': not all control paths return a value
+  LINK : C:\Users\marsh\source\repos\OpenGLCourseApp\Debug\OpenGLCourseApp.exe not found or not built by the last incremental link; performing full link
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   OpenGLCourseApp.vcxproj -> C:\Users\marsh\source\repos\OpenGLCourseApp\Debug\OpenGLCourseApp.exe
