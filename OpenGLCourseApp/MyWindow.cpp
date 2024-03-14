@@ -39,6 +39,7 @@ int MyWindow::Init()
         return 1;
     }
     //set up glfw window properties
+    // 
     //opengl version... we are using 3.3
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -82,16 +83,13 @@ int MyWindow::Init()
 
     //initailze depth test so the screen can determine which vertext should be behind vs in front
     glEnable(GL_DEPTH_TEST);
+
     //setup our viewport size
-    //this is the buffer viewport the other width and heighth is for the window
     glViewport(0, 0, bufferWidth, bufferHeight);
 
 
     //**SETTING THE WINDOW**
     //asssign a user pointer to the window being used
-    //because its a static function, it wont be able to tell which window called it because its not attached to the object.
-    //we need to send the winow we want, so we need to assign the window for it by setting it as the window user pointer
-    //so the function wont know which object called the Handle keys function. it will have a pointer to the object because we set it as the window user pointer
     glfwSetWindowUserPointer(window,this);
 }
 
@@ -164,5 +162,4 @@ void MyWindow::HandleMouse(GLFWwindow* window, double xPos, double yPos)
     theWindow->lastX = xPos;
     theWindow->lastY = yPos;
 
-    //printf("x:%.6f , y:%.6f \n", theWindow->xChange, theWindow->yChange);
 }

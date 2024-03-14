@@ -148,14 +148,9 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
     }
     //__GRAB VALUES FROM SHADERS___
 
-    //get location/id of uniform variable
     uniformModel = glGetUniformLocation(shaderID, "model");
-    //get the address/id of the worldProjection and place it in the uniformProjection variable
-    uniformProjection = glGetUniformLocation(shaderID, "projection");//this is to get the order when vertices are ontop if eachother
-    //we get the uniform view from the shader from view.... the view variable is the uniform variable we place inthe shader.vert file
+    uniformProjection = glGetUniformLocation(shaderID, "projection");
     uniformView = glGetUniformLocation(shaderID, "view");
-
-    //if there is a problem with the rendering and the log does not say so, there is a high chance it has to do here, where the string literal is misspelled
     uniformAmbientColor = glGetUniformLocation(shaderID, "directionalLight.colour");
     uniformAmbientIntensity = glGetUniformLocation(shaderID, "directionalLight.ambientIntensity");
     uniformDirection = glGetUniformLocation(shaderID, "directionalLight.direction");
@@ -167,8 +162,7 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
 
 void Shader::AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
 {
-    //create the shader based on the type... glCreateShader: creates an empty shader object and returns a unsigned value by which it can be referenced as like an ID
-//so theShader is an alias value for the shader id on the graphics card.
+    //create the shader based on the type. returns ID for shader on gpu
     GLuint theShader = glCreateShader(shaderType);
     //get the code
     const GLchar* theCode[1];

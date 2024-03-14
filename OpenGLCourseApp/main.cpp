@@ -45,28 +45,15 @@ GLfloat lastTime = 0.0f;
 const unsigned int WIDTH = 1280;
 const unsigned int HEIGHT = 728;
 
-/*
-* //if i want to use an object
-void CreateShaders()
-{
-    //creating shader on the heap
-    Shader *shader1 = new Shader();
-    //creating the file
-    shader1->CreateFromFiles(vShader, fShader);
-    //copying it intot he list and drefrerning it
-    shaderList.push_back(*shader1);
-}*/
 void CreateShader()
 {
     Shader* shader1 = new Shader();
     shader1->CreateFromFile(vShader,fShader);
     shaderList.push_back(shader1);
 }
+
 void CalculateAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticesCount, unsigned int vertexLength, unsigned int normalOffset)
 {
-    //printf("how much are we skipping vertex Length: %u \n", vertexLength);//      8
-    
-    //these numbers are so we can jump around our vertices and indeces much easier...?
     for (size_t i = 0; i < indiceCount; i += 3)
     {
         unsigned int in0 = indices[i] * vertexLength;
@@ -83,9 +70,8 @@ void CalculateAverageNormals(unsigned int* indices, unsigned int indiceCount, GL
         in0 += normalOffset;
         in1 += normalOffset;
         in2 += normalOffset;
+
         //adding the normals in the respectvie place.
-        //vertex 0 which is  -1.0f, -1.0f, 0.0f,     0.0f, 0.0f,             0.0f,0.0f,0.0f, the calculations are going to be the average of 
-                                                                            //         this triangle 0,3,1, this triangle 2,3,0 and this triangle 0,1,2
         vertices[in0] += normal.x;
         vertices[in0 + 1] += normal.y;
         vertices[in0 + 2] += normal.z;
@@ -110,36 +96,21 @@ void CalculateAverageNormals(unsigned int* indices, unsigned int indiceCount, GL
             vertices[nOffset + 1] = vec.y;
             vertices[nOffset + 2] = vec.z;
         }
-
-
     }
 }
 
 void CreateObject()
 {
-    //place which point to place in which order based on indeces
-    //we are saying the 0 index in vertices is our first point
-    //then draw the 3rd index, then draw the 1st index.
-    //each line is a side of our pyramid. 
+
     //THE INDICES IS REFERING THE LINE IN THE VERTICES SO 0 IS -1.0f,-1.0f,0.0f AND 3 is 0.0f,1.0f,0.0f
-    //the second index in indeces (2,3,0,) is the front facing side... 
     unsigned int indices[] = {
         0,3,1,
         1,3,2,
-        2,3,0,//this  right bottom point(1.0f,-1.0f,0.0f) top point(0.0f,1.0f,0.0f) left bottom point(-1.0f,-1.0f,0.0f,)
+        2,3,0,
         0,1,2
     };
 
-
-
     //define points of VAOs
-    /*
-    0,0 is the bottom left of the texture
-    1,0 is the bottom right of the texture
-    0,1 is the top left of the texture
-    1,1 is the top right of the texture
-    //.5 is going to be the center so we are cutting out a tringle 
-    */
     GLfloat vertices[] = {
         // vertext coordinates
         //                      texture coordinates     normals
@@ -149,25 +120,8 @@ void CreateObject()
         1.0f, -1.0f, -0.5f,      1.0f, 0.0f,             0.0f,0.0f,0.0f,
         0.0f, 1.0f, 0.0f,       0.5f, 1.0f,             0.0f,0.0f,0.0f,
     };
-    /*
-    //define points of VAOs
-    //i think each of them are the vertex buffers
-    //but we are packing additional attributes above
-    // we are now adding textures and telling the attribute pointer where to read them based off the index of the array
-    //so we can't use this anymore
-    GLfloat vertices[] = {
-        -1.0f,-1.0f,0.0f,
-        0.0f,-1.0f,1.0f, 
-        1.0f,-1.0f,0.0f,
-        0.0f,1.0f,0.0f
-    };
-    */
 
-    //we are passing them in as pointer so that when we alter them we and dont need to make any returns
-    //unsigned int indices[]... how many there are... the vertices... how much total data points we have in the vertices... size of each vertex data... where does the normals entrypoint start
     CalculateAverageNormals(indices, 12, vertices,32,8,5);
-
-    //center of screen is 0,0 in opengl
 
     Mesh* obj1 = new Mesh();
     obj1->CreateMesh(vertices, indices, 32, 12);
@@ -179,9 +133,6 @@ void CreateObject()
 
 }
 
-
-
-
 int main()
 {
 
@@ -192,7 +143,6 @@ int main()
     CreateObject();
     //compile shader
     CreateShader();
-    //camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), 90.0f, 0.0f, 5.0f, 0.1f);//this was making it go crazy... the world up was inverted and the yaw was inverted
 
     camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.075f);
 
@@ -214,8 +164,10 @@ int main()
     glm::mat4 projection = glm::perspective(45.0f, window.GetBufferWidth() / window.GetBuggerHeight(), 0.1f, 100.0f);
     while (!window.getShouldClose())
     {
-        GLfloat now = glfwGetTime(); // SDL_GetPerformanceCounter();
-        deltaTime = now - lastTime; // (now - lastTime)*1000/SDL_GetPerformanceFrequency();
+
+        //getting deltatime
+        GLfloat now = glfwGetTime(); 
+        deltaTime = now - lastTime; 
         lastTime = now;
 
         //get and handle user input events
@@ -226,8 +178,8 @@ int main()
 
 
         //clear window
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);//these values are the color/256
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);//now it's clearing both the depth and buffer bit via the bitwaise p[erator
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
         glUseProgram(shader);
@@ -245,57 +197,45 @@ int main()
         uniformShinyIntesity = shaderList[0]->GetShininessLocation();
         uniformSpecularIntensity = shaderList[0]->GetSpecularIntensityLocation();
         //        mainLight.UseLight(uniformAmbientIntensity, uniformAmbientColour);
-
         mainLight.UseLight(uniformAmbientIntensity, uniformAmbientColour,uniformDiffusionIntensity,uniformDirection);
 
-        //glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 model(1.0f);
         //modifying the model
 
-        //get the uniform variabel here (1)
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, -3.5f));
         //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
 
-        //Passing to shader.vert vs shader.frag?
-        //
-        
-        //uniformModel is getting the id throuigh the shader function GetModelLocation() that is returning the uniformProjection id from uniformModel = glGetUniformLocation(shaderID, "model");
+
         glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
-        //pass in the variable
         glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.CalculateViewMatrix()));
-
         glUniform3f(uniformEyePos,camera.GetCameraPosition().x, camera.GetCameraPosition().y, camera.GetCameraPosition().z);
 
 
         //we will draw the texture onto whatever texture is being references here before we render the texture
         brickTexture.UseTexture();
-        shinyMat.UseMaterial(uniformSpecularIntensity, uniformShinyIntesity);//we could send these directly rather than using them in main, but we are going to use them here
+        shinyMat.UseMaterial(uniformSpecularIntensity, uniformShinyIntesity);
         meshList[0]->RenderMesh();
 
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 2.25f, -3.5f));
-        //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
         glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
         dirtTexture.UseTexture();
         dullMat.UseMaterial(uniformSpecularIntensity, uniformShinyIntesity);
         meshList[1]->RenderMesh();
-
-
 
         //this is where you unassign the shader
         glUseProgram(0);
 
         //there is two buffers... one you can see and one you are drawing to
         window.SwapBuffers();
-
-
     }
 
     //std::cout << "Hello World!\n";
 
 }
 
+    //vertex shader vs fragment shader... the program passes data to the vertex shader then the vertex shader passes data to the fragment shader
 
     //projection matrix: matrix that converts items into a normalized matrix that determines what is rendered and what is culled (our vertex positions are multiplied by our projection matrix and thats what gives us the normliazed value)
 

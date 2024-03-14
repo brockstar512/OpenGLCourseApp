@@ -4,7 +4,6 @@ Light::Light()
 {
 	colour = glm::vec3(1.0f, 1.0f, 1.0f);
 	ambientIntensity = 1.0f;
-	//
 	direction = glm::vec3(0.0f, -1.0f, 0.0f);
 	diffuseIntensity = 0.0f;
 }
@@ -19,18 +18,18 @@ Light::Light(GLfloat red, GLfloat green, GLfloat blue, GLfloat aIntensity, GLflo
 {
 	colour = glm::vec3(red, green, blue);
 	ambientIntensity = aIntensity;
-	//
 	direction = glm::vec3(xDir, yDir, zDir);
 	diffuseIntensity = dIntensity; 
 }
 
-//this light is passing the uniform variable to the vertex shader after getting the value from the shaders for the locations of the ids/address... the shdaers have getters that get the uniform values id that we need to set
-//
+//ambient light
 void Light::UseLight(GLfloat ambientIntensityLocation, GLfloat ambientColourLocation)
 {
 	glUniform3f(ambientColourLocation, colour.x, colour.y, colour.z);
 	glUniform1f(ambientIntensityLocation, ambientIntensity);
 }
+
+//diffused light
 void Light::UseLight(GLfloat ambientIntensityLocation, GLfloat ambientColourLocation,GLfloat diffuseIntensityLocation, GLfloat directionLocation)
 {
 	glUniform3f(ambientColourLocation, colour.x, colour.y, colour.z);
@@ -41,12 +40,6 @@ void Light::UseLight(GLfloat ambientIntensityLocation, GLfloat ambientColourLoca
 	glUniform1f(diffuseIntensityLocation, diffuseIntensity);
 }
 
-/*
-void Light::UseLight(GLfloat ambientIntensityLocation, GLfloat ambientColourLocation, GLfloat diffuseIntensityLocation, GLfloat directionLocation)
-{
-
-}
-*/
 Light::~Light()
 {
 }

@@ -1,13 +1,8 @@
 #include "Camera.h"
 
 Camera::Camera() {}
-//setting the values of what it up and how to control within that matrix
-//						start position
-										//what is world up 
-															//starting looking left or right
-																			//starting looking up or down
-																										//how fast you walk
-																															//how fast you look			
+
+//setting the values of what it up and how to control within that matrix		
 Camera::Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLfloat startPitch, GLfloat startMoveSpeed, GLfloat startTurnSpeed)
 {
 	position = startPosition;
