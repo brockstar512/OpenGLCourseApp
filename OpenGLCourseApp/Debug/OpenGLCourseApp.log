@@ -1,14 +1,24 @@
-﻿  Shader.cpp
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(101,107): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(101,71): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(101,33): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(100,79): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(100,33): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(99,95): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(99,49): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(108,81): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(108,32): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(107,94): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(107,45): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+﻿  MyWindow.cpp
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.h(19,36): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
+  (compiling source file 'MyWindow.cpp')
+  
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.h(20,37): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
+  (compiling source file 'MyWindow.cpp')
+  
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.cpp(153,28): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.cpp(154,28): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.cpp(158,31): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.cpp(160,43): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.cpp(162,24): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.cpp(163,24): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+  main.cpp
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.h(19,36): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.h(20,37): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\main.cpp(183,21): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+  Generating Code...
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.cpp(94,1): warning C4715: 'MyWindow::Init': not all control paths return a value
   OpenGLCourseApp.vcxproj -> C:\Users\marsh\source\repos\OpenGLCourseApp\Debug\OpenGLCourseApp.exe

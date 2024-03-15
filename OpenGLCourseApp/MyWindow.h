@@ -17,7 +17,7 @@ public:
 	MyWindow(GLint windowWidth, GLint windowHeight);
 	int Init();
 	GLfloat GetBufferWidth() { return bufferWidth; }
-	GLfloat GetBuggerHeight() { return bufferHeight; }
+	GLfloat GetBufferHeight() { return bufferHeight; }
 	bool getShouldClose() { return glfwWindowShouldClose(window); }
 	void SwapBuffers() { glfwSwapBuffers(window); }
 	bool* GetKeys() { return keys; }
