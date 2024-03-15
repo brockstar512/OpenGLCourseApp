@@ -5,6 +5,10 @@
 #include <iostream>
 #include<fstream>
 #include <string>
+#include "DirectionalLight.h"
+#include "PointLight.h"
+#include "CommonValues.h"
+//class DirectionalLight; //forward declaring -> this will prevent putting all the header files in here
 class Shader
 {
 public:
@@ -21,13 +25,37 @@ public:
 	GLuint GetSpecularIntensityLocation();
 	GLuint GetShininessLocation();
 	GLuint GetEyeLocation();
-
+	void SetPointLights(PointLight* pLights,unsigned int lightCount);
+	void SetDirectionLight(DirectionalLight* dLight);
 	void UseShader();
 	void ClearShader();
 	~Shader();
 private:
-	GLuint shaderID, uniformProjection, uniformModel=0, uniformView, uniformAmbientIntensity, uniformAmbientColor, uniformDiffuseIntensity, uniformDirection, uniformEyePosition, uniformSpecularIntensity, uniformShininess;
+	GLuint shaderID, uniformProjection, uniformModel, uniformView,uniformEyePosition, uniformSpecularIntensity, uniformShininess;
 	void CompileShader(const char* vertexCode, const char* fragmentCode);
 	void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType);
+	int pointLightCount = 0;
+
+	struct {
+		GLuint uniformColor=0;
+		GLuint uniformAmbientIntensity=0;
+		GLuint uniformDiffuseIntensity=0;
+		GLuint uniformDirection=0;
+
+	} uniformDirectionLight;
+
+	GLuint uniformPointLightCount = 0;
+	struct {
+		GLuint uniformColor;
+		GLuint uniformAmbientIntensity;
+		GLuint uniformDiffuseIntensity;
+		GLuint uniformDirection;
+		GLuint uniformPosition;
+		GLuint uniformExponent;
+		GLuint uniformLinear;
+		GLuint uniformConstant;
+
+
+	} uniformPointLight[MAX_POINT_LIGHTS];
 };
 

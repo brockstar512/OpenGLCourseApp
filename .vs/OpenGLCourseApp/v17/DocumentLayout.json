@@ -3,24 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{24D11D30-7EFB-4F29-8267-B2B324B794FF}|OpenGLCourseApp\\OpenGLCourseApp.vcxproj|C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\Light.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{24D11D30-7EFB-4F29-8267-B2B324B794FF}|OpenGLCourseApp\\OpenGLCourseApp.vcxproj|solutionrelative:OpenGLCourseApp\\Light.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{24D11D30-7EFB-4F29-8267-B2B324B794FF}|OpenGLCourseApp\\OpenGLCourseApp.vcxproj|C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\PointLight.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{24D11D30-7EFB-4F29-8267-B2B324B794FF}|OpenGLCourseApp\\OpenGLCourseApp.vcxproj|solutionrelative:OpenGLCourseApp\\PointLight.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{24D11D30-7EFB-4F29-8267-B2B324B794FF}|OpenGLCourseApp\\OpenGLCourseApp.vcxproj|C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{24D11D30-7EFB-4F29-8267-B2B324B794FF}|OpenGLCourseApp\\OpenGLCourseApp.vcxproj|solutionrelative:OpenGLCourseApp\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{24D11D30-7EFB-4F29-8267-B2B324B794FF}|OpenGLCourseApp\\OpenGLCourseApp.vcxproj|C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\DirectionalLight.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{24D11D30-7EFB-4F29-8267-B2B324B794FF}|OpenGLCourseApp\\OpenGLCourseApp.vcxproj|solutionrelative:OpenGLCourseApp\\DirectionalLight.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{24D11D30-7EFB-4F29-8267-B2B324B794FF}|OpenGLCourseApp\\OpenGLCourseApp.vcxproj|C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\Shader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{24D11D30-7EFB-4F29-8267-B2B324B794FF}|OpenGLCourseApp\\OpenGLCourseApp.vcxproj|solutionrelative:OpenGLCourseApp\\Shader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{24D11D30-7EFB-4F29-8267-B2B324B794FF}|OpenGLCourseApp\\OpenGLCourseApp.vcxproj|C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\DirectionalLight.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{24D11D30-7EFB-4F29-8267-B2B324B794FF}|OpenGLCourseApp\\OpenGLCourseApp.vcxproj|solutionrelative:OpenGLCourseApp\\DirectionalLight.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{24D11D30-7EFB-4F29-8267-B2B324B794FF}|OpenGLCourseApp\\OpenGLCourseApp.vcxproj|C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\Light.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{24D11D30-7EFB-4F29-8267-B2B324B794FF}|OpenGLCourseApp\\OpenGLCourseApp.vcxproj|solutionrelative:OpenGLCourseApp\\Light.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{24D11D30-7EFB-4F29-8267-B2B324B794FF}|OpenGLCourseApp\\OpenGLCourseApp.vcxproj|C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\Shader.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{24D11D30-7EFB-4F29-8267-B2B324B794FF}|OpenGLCourseApp\\OpenGLCourseApp.vcxproj|solutionrelative:OpenGLCourseApp\\Shader.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,58 +26,45 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Light.h",
-              "DocumentMoniker": "C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\Light.h",
-              "RelativeDocumentMoniker": "OpenGLCourseApp\\Light.h",
-              "ToolTip": "C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\Light.h",
-              "RelativeToolTip": "OpenGLCourseApp\\Light.h",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAABEAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-03-14T18:51:33.887Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Light.cpp",
-              "DocumentMoniker": "C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\Light.cpp",
-              "RelativeDocumentMoniker": "OpenGLCourseApp\\Light.cpp",
-              "ToolTip": "C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\Light.cpp",
-              "RelativeToolTip": "OpenGLCourseApp\\Light.cpp",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAABgAAAAAAAAA",
+              "Title": "PointLight.cpp",
+              "DocumentMoniker": "C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\PointLight.cpp",
+              "RelativeDocumentMoniker": "OpenGLCourseApp\\PointLight.cpp",
+              "ToolTip": "C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\PointLight.cpp",
+              "RelativeToolTip": "OpenGLCourseApp\\PointLight.cpp",
+              "ViewState": "AQIAAAgAAAAAAAAAAAAgwB4AAAABAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-03-14T18:26:00.942Z",
+              "WhenOpened": "2024-03-15T18:18:47.237Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "DirectionalLight.h",
-              "DocumentMoniker": "C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\DirectionalLight.h",
-              "RelativeDocumentMoniker": "OpenGLCourseApp\\DirectionalLight.h",
-              "ToolTip": "C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\DirectionalLight.h",
-              "RelativeToolTip": "OpenGLCourseApp\\DirectionalLight.h",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAHAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-03-14T18:25:50.597Z",
+              "Title": "Shader.cpp",
+              "DocumentMoniker": "C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\Shader.cpp",
+              "RelativeDocumentMoniker": "OpenGLCourseApp\\Shader.cpp",
+              "ToolTip": "C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\Shader.cpp",
+              "RelativeToolTip": "OpenGLCourseApp\\Shader.cpp",
+              "ViewState": "AQIAAE8AAAAAAAAAAAAgwGEAAAAbAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-03-14T19:39:33.3Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "DirectionalLight.cpp",
-              "DocumentMoniker": "C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\DirectionalLight.cpp",
-              "RelativeDocumentMoniker": "OpenGLCourseApp\\DirectionalLight.cpp",
-              "ToolTip": "C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\DirectionalLight.cpp",
-              "RelativeToolTip": "OpenGLCourseApp\\DirectionalLight.cpp",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAkAAAApAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-03-14T18:57:44.948Z",
+              "Title": "Shader.h",
+              "DocumentMoniker": "C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\Shader.h",
+              "RelativeDocumentMoniker": "OpenGLCourseApp\\Shader.h",
+              "ToolTip": "C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\Shader.h",
+              "RelativeToolTip": "OpenGLCourseApp\\Shader.h",
+              "ViewState": "AQIAACcAAAAAAAAAAAAAABsAAABAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-03-14T19:39:30.015Z",
               "EditorCaption": ""
             },
             {
@@ -92,7 +75,7 @@
               "RelativeDocumentMoniker": "OpenGLCourseApp\\main.cpp",
               "ToolTip": "C:\\Users\\marsh\\source\\repos\\OpenGLCourseApp\\OpenGLCourseApp\\main.cpp",
               "RelativeToolTip": "OpenGLCourseApp\\main.cpp",
-              "ViewState": "AQIAALgAAAAAAAAAAAAAAL4AAAAIAAAA",
+              "ViewState": "AQIAAKcAAAAAAAAAAAAAAKsAAAAWAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-03-14T17:51:56.988Z",
               "EditorCaption": ""

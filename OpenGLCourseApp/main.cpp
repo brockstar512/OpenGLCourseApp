@@ -17,6 +17,8 @@
 #include "Texture.h"
 #include "DirectionalLight.h"
 #include "Material.h"
+#include "CommonValues.h"
+#include "PointLight.h"
 
 Camera camera;
 const float toRadians = 3.14159265f / 180.0f;
@@ -30,8 +32,11 @@ Texture brickTexture;
 Texture dirtTexture;
 
 //Light amLight
+//Light amLight;
 //light
 DirectionalLight mainLight;
+PointLight pointLights[MAX_POINT_LIGHTS];
+
 
 //Material
 Material shinyMat;
@@ -157,9 +162,24 @@ int main()
     dullMat = Material(0.3f, 4);
 
     //amLight = Light(1.0f,1.0f,1.0f,0.5f);
-    mainLight = DirectionalLight(1.0f, 1.0f, 1.0f, 0.1f, 0.3f, 0.0f, 0.0f, -1.0f);
+    mainLight = DirectionalLight(1.0f, 1.0f, 1.0f, 0.1f, 0.3f, 0.0f, 0.0f, -1.0f);//this is pointing staight down
 
-    GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformAmbientIntensity = 0, uniformAmbientColour = 0,uniformDiffusionIntensity = 0, uniformDirection = 0, uniformEyePos, uniformSpecularIntensity, uniformShinyIntesity;
+    unsigned int pointLightCount = 0;
+
+    pointLights[0] = PointLight(1.0f, 0.0f, 0.0f, 
+        0.1f, 1.0f,
+        -4.0f, 0.0f, -4.0f, 
+        0.3f, 0.2f, 0.1f);
+    pointLightCount++;
+
+    pointLights[1] = PointLight(0.0f, 0.0f, 1.0f, 
+        0.1f, 1.0f,
+        4.0f, 2.0f, 4.0f, 
+        0.3f, 0.2f, 0.1f);
+    pointLightCount++;
+
+
+    GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePos = 0, uniformSpecularIntensity =0 , uniformShinyIntesity = 0;
 
     //loop until window closed
     glm::mat4 projection = glm::perspective(45.0f, window.GetBufferWidth() / window.GetBuggerHeight(), 0.1f, 100.0f);
@@ -190,15 +210,11 @@ int main()
         uniformProjection = shaderList[0]->GetProjectionLocation();
         
         uniformView = shaderList[0]->GetViewLocation();
-        uniformAmbientIntensity = shaderList[0]->GetAmbientIntensity();
-        uniformAmbientColour = shaderList[0]->GetAmbientColorLocation();
-        uniformDiffusionIntensity = shaderList[0]->GetDiffuseIntensityLocation(),
-        uniformDirection = shaderList[0]->GetDirectionLocation();
         uniformEyePos = shaderList[0]->GetEyeLocation();
         uniformShinyIntesity = shaderList[0]->GetShininessLocation();
         uniformSpecularIntensity = shaderList[0]->GetSpecularIntensityLocation();
-        //        amLight.UseLight(uniformAmbientIntensity, uniformAmbientColour);
-        mainLight.UseLight(uniformAmbientIntensity, uniformAmbientColour,uniformDiffusionIntensity,uniformDirection);
+        shaderList[0]->SetDirectionLight(&mainLight);
+        shaderList[0]->SetPointLights(pointLights, pointLightCount);
 
         glm::mat4 model(1.0f);
         //modifying the model
@@ -206,7 +222,7 @@ int main()
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, -3.5f));
         //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
 
-
+        //__SET UNIFORM VALUES__ every loop
         glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.CalculateViewMatrix()));
@@ -284,13 +300,22 @@ int main()
 
 
     //location vs uniform : uniform all vertex varaibles will be the same, location, the vertex variables will be individual
-/*
+    /*
     in one draw call, you set a uniform variable to a value that is the same for all vertices/fragments you render during this call. E.g. the position of a light, or the view_projection_matrix.
-
     However, you probably want for every vertex different vertex positions and maybe different texture coordinates etc. For these cases you use for example layout (location = 0) in vec3 aPos;
-*/
+    */
 
+    /*
+    glUniform modifies the value of a uniform variable or a uniform variable array. The location of the uniform variable to be modified is specified by location, 
+    which should be a value returned by glGetUniformLocation. glUniform operates on the program object that was made part of current state by calling glUseProgram.
+    */
 
+    //when your argument is a reference you are passing in a pointer which is just a pointer to an address so you do not need to dereference it. when you are passingin an array
+    //that is essentialy a pointer to the first index, so the parameter can be a pointer on the recieving signature. 
+    //   this is a reference because its an object->     shaderList[0]->SetDirectionLight(&mainLight);
+    //   this is left alone because its an array which is just a pointer to the location of the stored items->       shaderList[0]->SetPointLights(pointLights, pointLightCount);
+
+    //Each object in the scene has a instance of the vert and frag shader so the calculations are being applied to that object and vertices individually, not everything in the scene at once.
     
 
 
