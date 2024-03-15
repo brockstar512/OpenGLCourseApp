@@ -1,22 +1,14 @@
-﻿  PointLight.cpp
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\PointLight.cpp(23,14): warning C4244: 'argument': conversion from 'GLfloat' to 'GLint', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\PointLight.cpp(24,14): warning C4244: 'argument': conversion from 'GLfloat' to 'GLint', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\PointLight.cpp(25,14): warning C4244: 'argument': conversion from 'GLfloat' to 'GLint', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\PointLight.cpp(27,14): warning C4244: 'argument': conversion from 'GLfloat' to 'GLint', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\PointLight.cpp(28,14): warning C4244: 'argument': conversion from 'GLfloat' to 'GLint', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\PointLight.cpp(29,14): warning C4244: 'argument': conversion from 'GLfloat' to 'GLint', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\PointLight.cpp(30,14): warning C4244: 'argument': conversion from 'GLfloat' to 'GLint', possible loss of data
-  Shader.cpp
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(100,107): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(100,71): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+﻿  Shader.cpp
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(101,107): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(101,71): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(101,33): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(100,79): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
 C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(100,33): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(99,79): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(99,33): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(98,95): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(98,49): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(106,173): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(106,126): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(106,90): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(106,43): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
-  Generating Code...
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(99,95): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(99,49): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(108,81): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(108,32): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(107,94): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\Shader.cpp(107,45): warning C4244: 'argument': conversion from 'GLuint' to 'GLfloat', possible loss of data
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   OpenGLCourseApp.vcxproj -> C:\Users\marsh\source\repos\OpenGLCourseApp\Debug\OpenGLCourseApp.exe
