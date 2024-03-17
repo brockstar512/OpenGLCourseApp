@@ -110,7 +110,7 @@ void CreateObject()
         0, 2, 1,
         1, 2, 3
     };
-
+                            ///10 tils rather than 1 large stretch texture.. making it flat for the normals
     GLfloat floorVertices[] = {
         -10.0f, 0.0f, -10.0f,	0.0f, 0.0f,		0.0f, -1.0f, 0.0f,
         10.0f, 0.0f, -10.0f,	10.0f, 0.0f,	0.0f, -1.0f, 0.0f,
@@ -226,6 +226,7 @@ int main()
         dullMat.UseMaterial(uniformSpecularIntensity, uniformShininess);
         meshList[1]->RenderMesh();
 
+        //floor
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
         //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
