@@ -94,6 +94,7 @@ void Shader::SetPointLights(PointLight* pLights, unsigned int lightCount)
 
     glUniform1i(uniformPointLightCount, lightCount);
 
+    //each spotlight will have different uniform variables but the vertices on the spotlight will have the same uniform vaibles
     for (size_t i = 0; i < lightCount; i++)
     {
         pLights[i].UseLight(uniformPointLight[i].uniformAmbientIntensity, uniformPointLight[i].uniformColour,
@@ -102,8 +103,20 @@ void Shader::SetPointLights(PointLight* pLights, unsigned int lightCount)
     }
 }
 
-void Shader::SetSpotLights(SpotLight* sLight, unsigned int lightCount)
+void Shader::SetSpotLights(SpotLight* sLights, unsigned int lightCount)
 {
+    if (lightCount > MAX_SPOT_LIGHTS) lightCount = MAX_SPOT_LIGHTS;
+
+    glUniform1i(uniformSpotLightCount, lightCount);
+
+    for (size_t i = 0; i < lightCount; i++)
+    {
+        sLights[i].UseLight(uniformSpotLights[i].uniformAmbientIntensity, uniformSpotLights[i].uniformColour,
+            uniformSpotLights[i].uniformDiffuseIntensity, uniformSpotLights[i].uniformPosition, uniformSpotLights[i].uniformDirection,
+            uniformSpotLights[i].uniformConstant, uniformSpotLights[i].uniformLinear, uniformSpotLights[i].uniformExponent, 
+            uniformSpotLights[i].uniformEdge);
+    }
+
 }
 
 void Shader::SetDirectionalLight(DirectionalLight* dLight)
@@ -241,10 +254,10 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
         uniformSpotLights[i].uniformExponent = glGetUniformLocation(shaderID, locBuff);
 
         snprintf(locBuff, sizeof(locBuff), "spotLights[%d].direction", i);
-        uniformSpotLights[i].uniformExponent = glGetUniformLocation(shaderID, locBuff);
+        uniformSpotLights[i].uniformDirection = glGetUniformLocation(shaderID, locBuff);
 
         snprintf(locBuff, sizeof(locBuff), "spotLights[%d].edge", i);
-        uniformSpotLights[i].uniformExponent = glGetUniformLocation(shaderID, locBuff);
+        uniformSpotLights[i].uniformEdge = glGetUniformLocation(shaderID, locBuff);
     }
 
  

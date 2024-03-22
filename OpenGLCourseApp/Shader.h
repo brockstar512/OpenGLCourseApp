@@ -32,8 +32,8 @@ public:
 	GLuint GetEyePositionLocation();
 
 	void SetDirectionalLight(DirectionalLight* dLight);
-	void SetPointLights(PointLight* pLight, unsigned int lightCount);
-	void SetSpotLights(SpotLight* sLight, unsigned int lightCount);
+	void SetPointLights(PointLight* pLights, unsigned int lightCount);
+	void SetSpotLights(SpotLight* sLights, unsigned int lightCount);
 
 
 	void UseShader();

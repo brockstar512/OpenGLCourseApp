@@ -5,5 +5,5 @@ C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.h(19,36): w
 C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\MyWindow.h(20,37): warning C4244: 'return': conversion from 'GLint' to 'GLfloat', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\main.cpp(183,21): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\marsh\source\repos\OpenGLCourseApp\OpenGLCourseApp\main.cpp(210,21): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
   OpenGLCourseApp.vcxproj -> C:\Users\marsh\source\repos\OpenGLCourseApp\Debug\OpenGLCourseApp.exe

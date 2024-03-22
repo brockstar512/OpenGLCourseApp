@@ -11,7 +11,7 @@ public:
 		GLfloat con, GLfloat lin, GLfloat exp,
 		GLfloat edge);
 	void UseLight(GLuint ambientIntensityLocation, GLuint ambientColourLocation, GLuint diffuseIntensityLocation, GLuint positionLocation, GLuint directionLocation, GLuint constantLocation, GLuint linearLocation, GLuint exponentLocation, GLuint edgeLocation);
-
+	void SetFlashlight(glm::vec3 pos, glm::vec3 dir);
 private:
 	glm::vec3 direction;
 	GLfloat edge, procEdge;

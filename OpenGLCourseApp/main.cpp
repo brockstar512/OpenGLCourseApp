@@ -19,6 +19,7 @@
 #include "Material.h"
 #include "CommonValues.h"
 #include "PointLight.h"
+#include "SpotLight.h"
 
 Camera camera;
 const float toRadians = 3.14159265f / 180.0f;
@@ -38,7 +39,7 @@ Texture plainTexture;
 //light
 DirectionalLight mainLight;
 PointLight pointLights[MAX_POINT_LIGHTS];
-
+SpotLight spotLights[MAX_SPOT_LIGHTS];
 
 //Material
 Material shinyMat;
@@ -164,15 +165,41 @@ int main()
 
     unsigned int pointLightCount = 0;
     pointLights[0] = PointLight(0.0f, 0.0f, 1.0f,
-        0.0f, 1.0f,
+        0.0f, 0.1f,
         0.0f, 0.0f, 0.0f,
         0.3f, 0.2f, 0.1f);
     pointLightCount++;
     pointLights[1] = PointLight(0.0f, 1.0f, 0.0f,
-        0.0f, 1.0f,
+        0.0f, 0.1f,
         -4.0f, 2.0f, 0.0f,
         0.3f, 0.1f, 0.1f);
     pointLightCount++;
+
+
+    unsigned int spotLightCount = 0;
+    spotLights[0] = SpotLight(0.25f, 1.0f, 0.5f,
+        0.0f, 1.0f,
+        0.0f, 0.0f, 0.0f,
+        0.0f, -1.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+        20.0f);
+    spotLightCount++;
+
+    spotLights[1] = SpotLight(1.0f, 1.0f, 1.0f,
+        0.0f, 1.0f,
+        0.0f, -1.5f, 0.0f,
+        -100.0f, -1.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+        20.0f);
+    spotLightCount++;
+
+    spotLights[2] = SpotLight(1.0f, 0.0f, 1.0f,
+        0.0f, 1.0f,
+        5.0f, 0.0f, 5.0f,
+        0.0f, -1.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+        50.0f);
+    spotLightCount++;
 
     GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
         uniformSpecularIntensity = 0, uniformShininess = 0;
@@ -202,8 +229,14 @@ int main()
         uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
         uniformShininess = shaderList[0].GetShininessLocation();
 
+        glm::vec3 flashlightOffet = camera.GetCameraPosition() + glm::vec3(0,-0.3,0);
+
+        spotLights[1].SetFlashlight(flashlightOffet, camera.GetCameraDirection());
+
+
         shaderList[0].SetDirectionalLight(&mainLight);
         shaderList[0].SetPointLights(pointLights, pointLightCount);
+        shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
         glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.CalculateViewMatrix()));
@@ -231,7 +264,7 @@ int main()
         model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
         //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
         glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-        plainTexture.UseTexture();
+        dirtTexture.UseTexture();
         shinyMat.UseMaterial(uniformSpecularIntensity, uniformShininess);
         meshList[2]->RenderMesh();
 
@@ -288,28 +321,33 @@ int main()
     // directional light: light without position or source. all light coming as parralel. often represents the sun
     // point light: light bulb. shines in all direction from a specific position.
     // spot light:light emittied from a specific point with a certain range and direction
-    // area light: large light area that emits from a specific area
+    // area light: large rectangle light area that emits from a specific area
 
 
     //location vs uniform : uniform all vertex varaibles will be the same, location, the vertex variables will be individual
     /*
-    in one draw call, you set a uniform variable to a value that is the same for all vertices/fragments you render during this call. E.g. the position of a light, or the view_projection_matrix.
-    However, you probably want for every vertex different vertex positions and maybe different texture coordinates etc. For these cases you use for example layout (location = 0) in vec3 aPos;
+            in one draw call, you set a uniform variable to a value that is the same for all vertices/fragments you render during this call. E.g. the position of a light, or the view_projection_matrix.
+            However, you probably want for every vertex different vertex positions and maybe different texture coordinates etc. For these cases you use for example layout (location = 0) in vec3 aPos; so uniform variables are uniform across all vertices while location is varied per vertex
     */
 
     /*
-    glUniform modifies the value of a uniform variable or a uniform variable array. The location of the uniform variable to be modified is specified by location, 
-    which should be a value returned by glGetUniformLocation. glUniform operates on the program object that was made part of current state by calling glUseProgram.
+        glUniform modifies the value of a uniform variable or a uniform variable array. The location of the uniform variable to be modified is specified by location, 
+        which should be a value returned by glGetUniformLocation. glUniform operates on the program object that was made part of current state by calling glUseProgram.
     */
 
-    //when your argument is a reference you are passing in a pointer which is just a pointer to an address so you do not need to dereference it. when you are passingin an array
-    //that is essentialy a pointer to the first index, so the parameter can be a pointer on the recieving signature. 
+    //   when your argument is a reference you are passing in a pointer which is just a pointer to an address so you do not need to dereference it. when you are passingin an array
+    //   that is essentialy a pointer to the first index, so the parameter can be a pointer on the recieving signature. 
     //   this is a reference because its an object->     shaderList[0]->SetDirectionLight(&mainLight);
     //   this is left alone because its an array which is just a pointer to the location of the stored items->       shaderList[0]->SetPointLights(pointLights, pointLightCount);
 
     //Each object in the scene has a instance of the vert and frag shader so the calculations are being applied to that object and vertices individually, not everything in the scene at once.
     
+    //                                         value we want out of it.. factor that we want to scale .. new scale ratio
+    //                                                            normalize val             20
+    //in the spotlight frag shader "return colour * (1.0f - (1.0f - slFactor)*(1.0/(1.0 - sLight.edge));"
 
+
+       //vert vs frag shader
 
 
 
