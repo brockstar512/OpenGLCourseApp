@@ -21,6 +21,9 @@
 #include "PointLight.h"
 #include "SpotLight.h"
 
+
+#include <assimp/importer.hpp>
+
 Camera camera;
 const float toRadians = 3.14159265f / 180.0f;
 GLuint shader;
@@ -150,11 +153,11 @@ int main()
     camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 5.0f, 0.5f);
 
     brickTexture = Texture("Textures/brick.png");
-    brickTexture.LoadTexture();
+    brickTexture.LoadTextureWithAlpha();
     dirtTexture = Texture("Textures/dirt.png");
-    dirtTexture.LoadTexture();
+    dirtTexture.LoadTextureWithAlpha();
     plainTexture = Texture("Textures/plain.png");
-    plainTexture.LoadTexture();
+    plainTexture.LoadTextureWithAlpha();
 
     shinyMat = Material(4.0f, 256);
     dullMat = Material(0.3f, 4);
@@ -204,6 +207,12 @@ int main()
     GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
         uniformSpecularIntensity = 0, uniformShininess = 0;
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), (GLfloat)window.GetBufferWidth() / window.GetBufferHeight(), 0.1f, 100.0f);
+
+
+    //import models
+
+    Assimp::Importer importer;
+
 
     while (!window.getShouldClose())
     {
