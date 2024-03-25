@@ -20,9 +20,11 @@
 #include "CommonValues.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include "Model.h"
 
 
-#include <assimp/importer.hpp>
+Model heli;
+Model palmTree;
 
 Camera camera;
 const float toRadians = 3.14159265f / 180.0f;
@@ -162,8 +164,15 @@ int main()
     shinyMat = Material(4.0f, 256);
     dullMat = Material(0.3f, 4);
 
+
+    heli = Model();
+    heli.LoadModel("models/chopper.obj");
+    palmTree = Model();
+    palmTree.LoadModel("models/Tree.obj");
+    //palmTree.LoadModel("models/Tree1.obj");
+
     mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
-        0.0f, 0.0f,
+        0.5f, 0.2f,
         0.0f, 0.0f, -1.0f);
 
     unsigned int pointLightCount = 0;
@@ -211,7 +220,7 @@ int main()
 
     //import models
 
-    Assimp::Importer importer;
+    
 
 
     while (!window.getShouldClose())
@@ -254,7 +263,6 @@ int main()
         glm::mat4 model(1.0f);
 
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
-        //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
         glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
         brickTexture.UseTexture();
         shinyMat.UseMaterial(uniformSpecularIntensity, uniformShininess);
@@ -262,7 +270,6 @@ int main()
 
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 4.0f, -2.5f));
-        //model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
         glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
         dirtTexture.UseTexture();
         dullMat.UseMaterial(uniformSpecularIntensity, uniformShininess);
@@ -276,6 +283,21 @@ int main()
         dirtTexture.UseTexture();
         shinyMat.UseMaterial(uniformSpecularIntensity, uniformShininess);
         meshList[2]->RenderMesh();
+
+        //heli
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 5.0f, 5.0f));
+        //model = glm::scale(model, glm::vec3(0.005f, 0.005f, 0.005f));
+        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+        shinyMat.UseMaterial(uniformSpecularIntensity, uniformShininess);
+        heli.RenderModel();
+
+        //tree
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 5.0f, -5.0f));
+        //model = glm::scale(model, glm::vec3(1.0f, 1.0f, 0.005f));
+        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+        palmTree.RenderModel();
 
         glUseProgram(0);
 
@@ -357,6 +379,8 @@ int main()
 
 
        //vert vs frag shader
+
+//mesh is what vertexes are drawn, texture is what png is wrapped around object, material is how shiny or reflective the material is, shader is the program to send all data to  gpu so the lights and material can calulate what to draw and how to draw it
 
 
 
